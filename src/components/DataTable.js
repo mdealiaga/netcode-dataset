@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { useTable, useSortBy, useFilters } from 'react-table';
 
-// Default filter UI for a column
 const DefaultColumnFilter = ({
   column: { filterValue, preFilteredRows, setFilter },
 }) => {
@@ -12,9 +11,9 @@ const DefaultColumnFilter = ({
     <input
       value={filterValue || ''}
       onChange={e => {
-        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+        setFilter(e.target.value || undefined); 
       }}
-      placeholder={`Search...`}
+      placeholder={`Search ${count} records...`}
     />
   );
 };
@@ -27,7 +26,7 @@ const DataTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/data.csv');
+        const response = await fetch(`${process.env.PUBLIC_URL}/data.csv`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -110,11 +109,19 @@ const DataTable = () => {
           prepareRow(row);
           return (
             <tr {...row.getRowProps()} key={row.id}>
-              {row.cells.map(cell => (
-                <td {...cell.getCellProps()} key={cell.column.id}>
-                  {cell.render('Cell')}
-                </td>
-              ))}
+              {row.cells.map(cell => {
+                let cellStyle = {};
+                if (cell.value === 'TRUE') {
+                  cellStyle = { backgroundColor: 'green', color: 'white' };
+                } else if (cell.value === 'FALSE') {
+                  cellStyle = { backgroundColor: 'red', color: 'white' };
+                }
+                return (
+                  <td {...cell.getCellProps()} style={cellStyle} key={cell.column.id}>
+                    {cell.render('Cell')}
+                  </td>
+                );
+              })}
             </tr>
           );
         })}
