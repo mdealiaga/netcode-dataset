@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  transform: scale(0.75); /* Adjust the scale value to your preference */
+  transform-origin: top left; /* Ensure scaling starts from the top left corner */
+  width: 133.33%; /* Adjust the width to counteract the scaling */
+  height: 133.33%; /* Adjust the height to counteract the scaling */
 }
 
 .App-logo {
