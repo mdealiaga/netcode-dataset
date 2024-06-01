@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/netcode-dataset/static/css/main.aca2424c.css",
-    "main.js": "/netcode-dataset/static/js/main.0372a15c.js",
+    "main.css": "/netcode-dataset/static/css/main.5a1b03c7.css",
+    "main.js": "/netcode-dataset/static/js/main.a134f9fe.js",
     "static/js/453.4d256bfd.chunk.js": "/netcode-dataset/static/js/453.4d256bfd.chunk.js",
     "index.html": "/netcode-dataset/index.html",
-    "main.aca2424c.css.map": "/netcode-dataset/static/css/main.aca2424c.css.map",
-    "main.0372a15c.js.map": "/netcode-dataset/static/js/main.0372a15c.js.map",
+    "main.5a1b03c7.css.map": "/netcode-dataset/static/css/main.5a1b03c7.css.map",
+    "main.a134f9fe.js.map": "/netcode-dataset/static/js/main.a134f9fe.js.map",
     "453.4d256bfd.chunk.js.map": "/netcode-dataset/static/js/453.4d256bfd.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.aca2424c.css",
-    "static/js/main.0372a15c.js"
+    "static/css/main.5a1b03c7.css",
+    "static/js/main.a134f9fe.js"
   ]
 }
