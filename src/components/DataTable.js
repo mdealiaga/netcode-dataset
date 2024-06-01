@@ -13,20 +13,41 @@ const DefaultColumnFilter = ({
       onChange={e => {
         setFilter(e.target.value || undefined); 
       }}
-      placeholder={`Search ${count} records...`}
+      placeholder={`Search...`}
     />
   );
 };
 
+const renderTextWithLinks = text => {
+  if (!text) return text; // Return if text is undefined or null
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.split(urlRegex).filter(Boolean).map((part, index) => {
+    if (urlRegex.test(part)) {
+      return (
+        <a href={part} key={index} target="_blank" rel="noopener noreferrer">
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+};
+
+const renderCell = cell => {
+  const value = cell.value;
+  return <span>{renderTextWithLinks(value)}</span>;
+};
+
 const DataTable = () => {
   const [data, setData] = useState([]);
+  const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.PUBLIC_URL}/data.csv`);
+        const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSev34FK3e5MuHtQED5AUSovGEAU9l5TgxP4_w-RnEQRngIM6EDBRvzPS7WJnWKHjPrzMsl9BlCI1ly/pub?gid=133993680&single=true&output=csv');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -35,7 +56,36 @@ const DataTable = () => {
         const decoder = new TextDecoder('utf-8');
         const csv = decoder.decode(result.value);
         const results = Papa.parse(csv, { header: true });
-        setData(results.data);
+
+        // Remove the 'Timestamp' column and preprocess headers
+        const processedData = results.data.map(row => {
+          const newRow = { ...row };
+          delete newRow.Timestamp; // Assuming 'Timestamp' is the exact header name
+          return newRow;
+        });
+
+        const processedColumns = Object.keys(processedData[0]).map(key => {
+          const match = key.match(/(.*?)(\s*\(.*\))?$/); // Extract main text and parenthetical comments
+          const mainText = match[1];
+          const comments = match[2];
+          return {
+            Header: (
+              <div>
+                <span>{renderTextWithLinks(mainText)}</span>
+                {comments && (
+                  <span className="comments">{renderTextWithLinks(comments)}</span>
+                )}
+              </div>
+            ),
+            accessor: key,
+            Filter: DefaultColumnFilter,
+            filter: 'text',
+            Cell: renderCell, // Use custom cell renderer
+          };
+        });
+
+        setData(processedData);
+        setColumns(processedColumns);
         setLoading(false);
       } catch (err) {
         setError(err);
@@ -45,19 +95,9 @@ const DataTable = () => {
     fetchData();
   }, []);
 
-  const columns = React.useMemo(
-    () => (data.length > 0 ? Object.keys(data[0]).map(key => ({
-      Header: key,
-      accessor: key,
-      Filter: DefaultColumnFilter, // Use default filter UI
-      filter: 'text',
-    })) : []),
-    [data]
-  );
-
   const defaultColumn = React.useMemo(
     () => ({
-      Filter: DefaultColumnFilter, // Set default filter UI
+      Filter: DefaultColumnFilter,
     }),
     []
   );
@@ -90,7 +130,6 @@ const DataTable = () => {
             {headerGroup.headers.map(column => (
               <th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
                 {column.render('Header')}
-                {/* Add a sort direction indicator */}
                 <span>
                   {column.isSorted
                     ? column.isSortedDesc
@@ -118,7 +157,7 @@ const DataTable = () => {
                 }
                 return (
                   <td {...cell.getCellProps()} style={cellStyle} key={cell.column.id}>
-                    {cell.render('Cell')}
+                    {renderCell(cell)}
                   </td>
                 );
               })}
