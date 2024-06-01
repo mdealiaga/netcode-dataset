@@ -1,0 +1,38 @@
+Game Name,Genre,Competitive/Cooperative/Casual,Engineering Team Size,Usual Lobby Size,Network Model,Netcode Solution,Server Authority,Deterministic Physics,Cheat Protection,Rollback,Deterministic Lockstep,Clientside Prediction,Server-Side Rewind,Dead Reckoning,Sources
+Mortal Kombat X,Fighting Game,Competitive,,2,Peer to Peer,,N/A,TRUE ,,TRUE,FALSE,TRUE,FALSE,TRUE,"Peer to peer: https://youtu.be/7jb0FOcImdg?si=dqg63BiKB2zmfyVG&t=198
+Deterministic: https://youtu.be/7jb0FOcImdg?si=5dqNC-6Lxx-ek0ky&t=277"
+Injustice 2,Fighting Game,Competitive,,2,Peer to Peer,,N/A,TRUE ,,TRUE,FALSE,TRUE,FALSE,TRUE,"Peer to peer: https://youtu.be/7jb0FOcImdg?si=dqg63BiKB2zmfyVG&t=198
+Deterministic: https://youtu.be/7jb0FOcImdg?si=5dqNC-6Lxx-ek0ky&t=277"
+Age of Empires 2,Real Time Strategy (RTS),Competitive,,4,Peer to Peer,,N/A,TRUE ,High,FALSE,TRUE,TRUE,,,"Peer to peer, deterministic, cheat protection
+https://www.gamedeveloper.com/programming/1500-archers-on-a-28-8-network-programming-in-age-of-empires-and-beyond
+Cheat protection: ""Because the game's outcome depended on all of the users executing exactly the same simulation, it was extremely difficult to hack a client (or client communication stream) and cheat. Any simulation that ran differently was tagged as ""out of sync"" and the game stopped."""
+Counter Strike: Source,First Person Shooter (FPS),Competitive,,10,Client/Server,Source Engine,Server-Authoritative,FALSE,,FALSE,FALSE,TRUE,TRUE,,"Client/Server, Server-Authoritative:
+https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking
+
+Server-Side Rewind: 
+https://developer.valvesoftware.com/wiki/Lag_Compensation"
+Counter Strike 2,First Person Shooter (FPS),Competitive,,10,Client/Server,Source 2 Engine,Server-Authoritative,,,FALSE,FALSE,TRUE,,,"Client/Server, Server-Authoritative:
+https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking
+
+Server-Side Rewind: 
+https://developer.valvesoftware.com/wiki/Lag_Compensation"
+Dota 2,Multiplayer Online Battle Arena (MOBA),Competitive,,10,Client/Server,Source 2 Engine,Server-Authoritative,,,FALSE,,,,,
+Valheim,Survival,Cooperative,,10,Client/Server,,Client-Authoritative,,Low,FALSE,,,,,"Client/Server and shared authority:
+https://steamcommunity.com/app/892970/discussions/0/4939856028569039376/"
+Deep Rock Galactic,First Person Shooter (FPS),Cooperative,,4,Peer to Peer,,N/A,,Low,FALSE,,,,,"Peer-to-Peer
+https://nofrag.com/interview-discussion-with-the-ceo-of-the-studio-behind-deep-rock-galactic/
+
+""We build the game based on Peer-to-Peer tech, so for PvP we would probably need a dedicated server structure."""
+Stumble Guys,Battle Royale,Competitive,,32,Client/Server,Photon Quantum,Arbitrer,,,FALSE,,,,,https://www.photonengine.com/ - Slides share which games use which Photon implementation
+Rocket League,Sports,Competitive,,6,Client/Server,,Server-Authoritative,TRUE,High,TRUE,FALSE,TRUE,FALSE,TRUE,"https://www.gdcvault.com/play/1024972/It-IS-Rocket-Science-The
+Lag compensation: 30:00
+Rollback: 40:00 (isn't called rollback)"
+Lego Star Wars Battles,Action,Casual,,,,Photon Quantum,,,,,,,,,https://www.photonengine.com/ - Slides share which games use which Photon implementation
+NBA Clash,Sports,,,,,Photon Quantum,,,,,,,,,https://www.photonengine.com/ - Slides share which games use which Photon implementation
+Fortnite,Battle Royale,Competitive,,100,Client/Server,Unreal Engine,Server-Authoritative,,,,,,,,"https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-dedicated-servers-in-unreal-engine
+
+""Unreal Engine (UE) uses the client-server model for network multiplayer games. One server acts as the host for the game while players connect to the host as clients."""
+Valorant,First Person Shooter (FPS),Competitive,,10,Client/Server,,Server-Authoritative,,,,,,,,"https://technology.riotgames.com/news/peeking-valorants-netcode
+
+""Note: VALORANT uses a server-authoritative networking model to limit the types of cheats possible."""
+World of Warcraft,Massive Multiplayer Online Roleplaying Game (MMORPG),,,,Client/Server,,Hybrid,,,,,TRUE,,,
