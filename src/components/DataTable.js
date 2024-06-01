@@ -19,7 +19,7 @@ const DefaultColumnFilter = ({
 };
 
 const renderTextWithLinks = text => {
-  if (!text) return text; // Return if text is undefined or null
+  if (!text) return text; 
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.split(urlRegex).filter(Boolean).map((part, index) => {
     if (urlRegex.test(part)) {
@@ -57,10 +57,9 @@ const DataTable = () => {
         const csv = decoder.decode(result.value);
         const results = Papa.parse(csv, { header: true });
 
-        // Remove the 'Timestamp' column and preprocess headers
         const processedData = results.data.map(row => {
           const newRow = { ...row };
-          delete newRow.Timestamp; // Assuming 'Timestamp' is the exact header name
+          delete newRow.Timestamp; 
           return newRow;
         });
 
@@ -71,7 +70,7 @@ const DataTable = () => {
           return {
             Header: (
               <div>
-                <span>{renderTextWithLinks(mainText)}</span>
+                <span>{mainText}</span>
                 {comments && (
                   <span className="comments">{renderTextWithLinks(comments)}</span>
                 )}
@@ -80,7 +79,7 @@ const DataTable = () => {
             accessor: key,
             Filter: DefaultColumnFilter,
             filter: 'text',
-            Cell: renderCell, // Use custom cell renderer
+            Cell: renderCell, 
           };
         });
 
