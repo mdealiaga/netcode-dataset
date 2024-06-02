@@ -2,7 +2,7 @@
   "name": "my-dataset-viewer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://mdealiaga.github.io/netcode-dataset",
+  "homepage": "https://netcodedb.com/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
