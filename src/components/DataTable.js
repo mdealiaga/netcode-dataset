@@ -64,9 +64,11 @@ const DataTable = () => {
         });
 
         const processedColumns = Object.keys(processedData[0]).map(key => {
-          const match = key.match(/(.*?)(\s*\(.*\))?$/); // Extract main text and parenthetical comments
-          const mainText = match[1];
-          const comments = match[2];
+          const modifiedKey = key.replace(/\./g, '_'); // Replace periods with underscores
+          const match = modifiedKey.match(/^(.*?)\s*(\((.*)\))?$/);
+          const mainText = match ? match[1] : modifiedKey;
+          const comments = match && match[2] ? match[2] : '';
+
           return {
             Header: (
               <div>
@@ -76,14 +78,24 @@ const DataTable = () => {
                 )}
               </div>
             ),
-            accessor: key,
+            accessor: modifiedKey,
             Filter: DefaultColumnFilter,
             filter: 'text',
             Cell: renderCell, 
+            width: mainText.length > 20 ? 200 : undefined,
           };
         });
 
-        setData(processedData);
+        const transformedData = processedData.map(row => {
+          const newRow = {};
+          Object.keys(row).forEach(key => {
+            const modifiedKey = key.replace(/\./g, '_');
+            newRow[modifiedKey] = row[key];
+          });
+          return newRow;
+        });
+
+        setData(transformedData);
         setColumns(processedColumns);
         setLoading(false);
       } catch (err) {
@@ -127,7 +139,7 @@ const DataTable = () => {
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
+              <th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} style={{ width: column.width }}>
                 {column.render('Header')}
                 <span>
                   {column.isSorted
