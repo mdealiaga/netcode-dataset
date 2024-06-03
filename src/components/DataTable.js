@@ -88,7 +88,7 @@ const DataTable = () => {
     return <div>No data available</div>;
   }
 
-  const pageSizeOptions = [10, 20, 50,100,1000];
+  const pageSizeOptions = [10, 20, 50];
 
   return (
     <div className="ag-theme-alpine" style={{ height: '600px', width: '100%' }}>
@@ -100,6 +100,7 @@ const DataTable = () => {
         paginationPageSize={10}
         paginationPageSizeSelector={pageSizeOptions}
         domLayout='autoHeight'
+        headerHeight={100} 
         frameworkComponents={{
           customHeader: CustomHeader,
           customCell: CustomCell,
