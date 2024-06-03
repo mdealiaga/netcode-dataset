@@ -1,22 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { useTable, useSortBy, useFilters } from 'react-table';
-
-const DefaultColumnFilter = ({
-  column: { filterValue, preFilteredRows, setFilter },
-}) => {
-  const count = preFilteredRows.length;
-
-  return (
-    <input
-      value={filterValue || ''}
-      onChange={e => {
-        setFilter(e.target.value || undefined); 
-      }}
-      placeholder={`Search...`}
-    />
-  );
-};
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 const renderTextWithLinks = text => {
   if (!text) return text; 
@@ -33,14 +19,14 @@ const renderTextWithLinks = text => {
   });
 };
 
-const renderCell = cell => {
-  const value = cell.value;
+const renderCell = params => {
+  const value = params.value;
   return <span>{renderTextWithLinks(value)}</span>;
 };
 
 const DataTable = () => {
-  const [data, setData] = useState([]);
-  const [columns, setColumns] = useState([]);
+  const [rowData, setRowData] = useState([]);
+  const [columnDefs, setColumnDefs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -65,38 +51,32 @@ const DataTable = () => {
 
         const processedColumns = Object.keys(processedData[0]).map(key => {
           const modifiedKey = key.replace(/\./g, '_'); // Replace periods with underscores
-          const match = modifiedKey.match(/^(.*?)\s*(\((.*)\))?$/);
+          const match = modifiedKey.match(/^(.*?)\s*(\((.*))?$/); // Updated regex
           const mainText = match ? match[1] : modifiedKey;
           const comments = match && match[2] ? match[2] : '';
+          const isSourcesColumn = mainText.toLowerCase() === 'sources'; // Check if the column is "Sources"
 
           return {
-            Header: (
-              <div>
-                <span>{mainText}</span>
-                {comments && (
-                  <span className="comments">{renderTextWithLinks(comments)}</span>
-                )}
-              </div>
-            ),
-            accessor: modifiedKey,
-            Filter: DefaultColumnFilter,
-            filter: 'text',
-            Cell: renderCell, 
-            width: mainText.length > 20 ? 200 : undefined,
+            headerName: mainText,
+            field: modifiedKey,
+            width: isSourcesColumn ? 400 : 150, // Set a wider width for the "Sources" column
+            cellRendererFramework: renderCell,
+            filter: 'agTextColumnFilter',
+            tooltipField: comments,
           };
         });
 
         const transformedData = processedData.map(row => {
           const newRow = {};
           Object.keys(row).forEach(key => {
-            const modifiedKey = key.replace(/\./g, '_');
+            const modifiedKey = key.replace(/\./g, '_'); // Replace periods with underscores
             newRow[modifiedKey] = row[key];
           });
           return newRow;
         });
 
-        setData(transformedData);
-        setColumns(processedColumns);
+        setRowData(transformedData);
+        setColumnDefs(processedColumns);
         setLoading(false);
       } catch (err) {
         setError(err);
@@ -106,21 +86,6 @@ const DataTable = () => {
     fetchData();
   }, []);
 
-  const defaultColumn = React.useMemo(
-    () => ({
-      Filter: DefaultColumnFilter,
-    }),
-    []
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({ columns, data, defaultColumn }, useFilters, useSortBy);
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -129,54 +94,21 @@ const DataTable = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  if (data.length === 0) {
+  if (rowData.length === 0) {
     return <div>No data available</div>;
   }
 
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id} style={{ width: column.width }}>
-                {column.render('Header')}
-                <span>
-                  {column.isSorted
-                    ? column.isSortedDesc
-                      ? ' 🔽'
-                      : ' 🔼'
-                    : ''}
-                </span>
-                <div>{column.canFilter ? column.render('Filter') : null}</div>
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()} key={row.id}>
-              {row.cells.map(cell => {
-                let cellStyle = {};
-                if (cell.value === 'TRUE') {
-                  cellStyle = { backgroundColor: 'green', color: 'white' };
-                } else if (cell.value === 'FALSE') {
-                  cellStyle = { backgroundColor: 'red', color: 'white' };
-                }
-                return (
-                  <td {...cell.getCellProps()} style={cellStyle} key={cell.column.id}>
-                    {renderCell(cell)}
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <div className="ag-theme-alpine" style={{ height: '600px', width: '100%' }}>
+      <AgGridReact
+        rowData={rowData}
+        columnDefs={columnDefs}
+        defaultColDef={{ flex: 1, minWidth: 100, filter: true }}
+        pagination={true}
+        paginationPageSize={10}
+        domLayout='autoHeight'
+      />
+    </div>
   );
 };
 
