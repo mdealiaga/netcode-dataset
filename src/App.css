@@ -1,13 +1,9 @@
 .App {
   text-align: center;
-  transform: scale(0.75); /* Adjust the scale value to your preference */
-  transform-origin: top left; /* Ensure scaling starts from the top left corner */
-  width: 133.33%; /* Adjust the width to counteract the scaling */
-  height: 133.33%; /* Adjust the height to counteract the scaling */
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 30vmin;
   pointer-events: none;
 }
 
@@ -24,7 +20,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(7.5px + 1.5vmin);
   color: white;
 }
 
@@ -41,39 +37,48 @@
   }
 }
 
-ttable {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-  font-size: 18px;
+.ag-theme-alpine {
+  font-size: 14px;
   text-align: left;
 }
 
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  word-break: break-word;
-  white-space: normal; 
-}
-th {
-  background-color: #f2f2f2;
-  min-width: 100px; 
-  max-width: 400px;
+.auto-height-cell {
+  white-space: normal;
+  line-height: 1.4;
 }
 
-th div {
-  margin-top: 5px;
+.ag-cell a {
+  color: #61dafb;
+  text-decoration: none;
 }
 
-input {
-  width: 100%;
-  padding: 5px;
-  box-sizing: border-box;
+.ag-cell a:hover {
+  text-decoration: underline;
 }
 
-.comments {
-  font-size: 0.8em;
-  font-weight: normal;
-  display: block; /* Ensure it appears below the main text */
-  margin-top: 2px;
+.cell-true {
+  background-color: green;
+  color: white;
+}
+
+.cell-false {
+  background-color: red;
+  color: white;
+}
+
+.ag-header-cell {
+  white-space: normal !important;
+  padding: 4px;
+  height: auto;
+}
+
+.ag-header-cell-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: normal !important;
+}
+
+.ag-header-cell a {
+  word-break: break-all;
 }
