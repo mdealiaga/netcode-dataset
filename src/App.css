@@ -1,9 +1,9 @@
 .App {
   text-align: center;
-  transform: scale(0.75); /* Adjust the scale value to your preference */
-  transform-origin: top left; /* Ensure scaling starts from the top left corner */
-  width: 133.33%; /* Adjust the width to counteract the scaling */
-  height: 133.33%; /* Adjust the height to counteract the scaling */
+  transform: scale(0.75); 
+  transform-origin: top left;
+  width: 133.33%; 
+  height: 133.33%; 
 }
 
 .App-logo {
@@ -46,9 +46,9 @@
   text-align: left;
 }
 
-.ag-cell {
-  word-break: break-word;
-  white-space: normal;
+.auto-height-cell {
+  white-space: normal; /* Ensure text wraps */
+  line-height: 1.5; /* Ensure enough vertical space */
 }
 
 .ag-cell a {
@@ -58,4 +58,26 @@
 
 .ag-cell a:hover {
   text-decoration: underline;
+}
+
+.cell-true {
+  background-color: green;
+  color: white;
+}
+
+.cell-false {
+  background-color: red;
+  color: white;
+}
+
+.ag-header-cell {
+  white-space: normal !important; /* Ensure header text wraps */
+  line-height: 1.2; /* Ensure proper line height */
+}
+
+.ag-header-cell-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: normal !important; /* Ensure header text wraps */
 }
