@@ -33,8 +33,8 @@ const DataTable = () => {
 
         const processedColumns = Object.keys(processedData[0]).map(key => {
           const modifiedKey = key.replace(/\./g, '_');
-          const match = modifiedKey.match(/^(.*?)\s*(\((.*)\))?$/);
-          const mainText = match ? match[1] : modifiedKey;
+          const match = key.match(/^(.*?)\s*\((.*)\)?$/);
+          const mainText = match ? match[1] : key;
           const comments = match && match[2] ? match[2] : '';
           const isSourcesColumn = mainText.toLowerCase() === 'sources';
 

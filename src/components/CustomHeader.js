@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const renderTextWithLinks = text => {
   if (!text) return text;
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urlRegex = /(https?:\/\/[^\s)]+)/g; // Adjusted regex to exclude closing parenthesis
   return text.split(urlRegex).filter(Boolean).map((part, index) => {
     if (urlRegex.test(part)) {
       return (
@@ -22,9 +22,9 @@ const CustomHeader = props => {
   useEffect(() => {
     // Update sortOrder state when sort state changes
     const updateSortOrder = () => {
-      const allColumns = columnApi.getAllColumns();
-      const currentColumn = allColumns.find(col => col.getColId() === column.getColId());
-      const sortState = currentColumn.getSort();
+      const columnState = columnApi.getColumnState();
+      const currentColumn = columnState.find(col => col.colId === column.getColId());
+      const sortState = currentColumn ? currentColumn.sort : null;
       setSortOrder(sortState || null);
     };
 
