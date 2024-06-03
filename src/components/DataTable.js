@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
 import CustomHeader from './CustomHeader';
 import CustomCell from './CustomCell';
 
@@ -91,7 +91,7 @@ const DataTable = () => {
   const pageSizeOptions = [10, 25, 50, 100, 1000];
 
   return (
-    <div className="ag-theme-alpine" style={{ height: '600px', width: '100%' }}>
+    <div className="ag-theme-quartz-dark" style={{ height: '600px', width: '100%' }}>
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}

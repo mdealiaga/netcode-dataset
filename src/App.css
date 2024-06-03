@@ -1,43 +1,52 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 30vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  background-color: #212735; 
+  color: #e0e0e0; 
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-color: #212735; 
+  padding: 10px 20px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(7.5px + 1.5vmin);
-  color: white;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.App-link {
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-link {
   color: #61dafb;
+  text-decoration: none;
+  font-size: 1em;
+  transition: color 0.3s ease;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.header-link:hover {
+  color: #21a1f1;
 }
 
-.ag-theme-alpine {
+.header-title {
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: bold; 
+}
+
+.download-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.content {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ag-theme-quartz-dark {
   font-size: 14px;
   text-align: left;
 }
@@ -48,7 +57,7 @@
 }
 
 .ag-cell a {
-  color: #61dafb;
+  color: #61dafb; 
   text-decoration: none;
 }
 
@@ -57,15 +66,14 @@
 }
 
 .cell-true {
-  background-color: green;
+  background-color: #42A5F5; 
   color: white;
 }
 
 .cell-false {
-  background-color: red;
+  background-color: #BA68C8; 
   color: white;
 }
-
 .ag-header-cell {
   white-space: normal !important;
   padding: 4px;
@@ -81,4 +89,9 @@
 
 .ag-header-cell a {
   word-break: break-all;
+  color: #61dafb; 
+}
+
+.ag-header-cell a:hover {
+  text-decoration: underline;
 }
