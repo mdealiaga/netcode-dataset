@@ -47,7 +47,7 @@ const DataTable = () => {
             cellClass: isSourcesColumn ? 'auto-height-cell' : '',
             filter: 'agTextColumnFilter',
             headerComponent: CustomHeader,
-            headerComponentParams: { displayName: mainText, tooltipField: comments },
+            headerComponentParams: { displayName: mainText, comments: comments },
             autoHeight: isSourcesColumn,
             cellClassRules: {
               'cell-true': params => params.value === 'TRUE',
@@ -88,19 +88,19 @@ const DataTable = () => {
     return <div>No data available</div>;
   }
 
-  const pageSizeOptions = [10, 25, 50,100,1000];
+  const pageSizeOptions = [10, 25, 50, 100, 1000];
 
   return (
     <div className="ag-theme-alpine" style={{ height: '600px', width: '100%' }}>
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
-        defaultColDef={{ flex: 1, minWidth: 200, filter: true }}
+        defaultColDef={{ flex: 1, minWidth: 200, filter: true, sortable: true }}
         pagination={true}
         paginationPageSize={25}
         paginationPageSizeSelector={pageSizeOptions}
         domLayout='autoHeight'
-        headerHeight={100} 
+        headerHeight={100}
         frameworkComponents={{
           customHeader: CustomHeader,
           customCell: CustomCell,
