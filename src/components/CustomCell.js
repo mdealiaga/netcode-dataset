@@ -1,7 +1,6 @@
 import React from 'react';
 
-const CustomCell = params => {
-  const value = params.value;
+const CustomCell = ({ value }) => {
   const renderTextWithLinks = text => {
     if (!text) return text;
     const urlRegex = /(https?:\/\/[^\s]+)/g;

@@ -1,13 +1,9 @@
 .App {
   text-align: center;
-  transform: scale(0.75); 
-  transform-origin: top left;
-  width: 133.33%; 
-  height: 133.33%; 
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 30vmin;
   pointer-events: none;
 }
 
@@ -24,7 +20,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(7.5px + 1.5vmin);
   color: white;
 }
 
@@ -42,13 +38,13 @@
 }
 
 .ag-theme-alpine {
-  font-size: 18px;
+  font-size: 14px;
   text-align: left;
 }
 
 .auto-height-cell {
-  white-space: normal; /* Ensure text wraps */
-  line-height: 1.5; /* Ensure enough vertical space */
+  white-space: normal;
+  line-height: 1.2;
 }
 
 .ag-cell a {
@@ -71,13 +67,13 @@
 }
 
 .ag-header-cell {
-  white-space: normal !important; /* Ensure header text wraps */
-  line-height: 1.2; /* Ensure proper line height */
+  white-space: normal !important;
+  line-height: 1.1;
 }
 
 .ag-header-cell-label {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  white-space: normal !important; /* Ensure header text wraps */
+  white-space: normal !important;
 }

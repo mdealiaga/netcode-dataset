@@ -3,7 +3,8 @@ import Papa from 'papaparse';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import CustomHeader from './CustomHeader'; // Import the custom header component
+import CustomHeader from './CustomHeader';
+import CustomCell from './CustomCell';
 
 const DataTable = () => {
   const [rowData, setRowData] = useState([]);
@@ -31,22 +32,23 @@ const DataTable = () => {
         });
 
         const processedColumns = Object.keys(processedData[0]).map(key => {
-          const modifiedKey = key.replace(/\./g, '_'); 
-          const match = modifiedKey.match(/^(.*?)\s*(\((.*)\))?$/); 
+          const modifiedKey = key.replace(/\./g, '_');
+          const match = modifiedKey.match(/^(.*?)\s*(\((.*)\))?$/);
           const mainText = match ? match[1] : modifiedKey;
           const comments = match && match[2] ? match[2] : '';
-          const isSourcesColumn = mainText.toLowerCase() === 'sources'; // Check if the column is "Sources"
+          const isSourcesColumn = mainText.toLowerCase() === 'sources';
 
           return {
             headerName: mainText,
             field: modifiedKey,
-            width: isSourcesColumn ? 600 : 200, 
-            minWidth: isSourcesColumn ? 600 : 200, 
-            cellClass: isSourcesColumn ? 'auto-height-cell' : '', 
+            width: isSourcesColumn ? 600 : 200,
+            minWidth: isSourcesColumn ? 400 : 200,
+            cellRenderer: isSourcesColumn ? CustomCell : undefined,
+            cellClass: isSourcesColumn ? 'auto-height-cell' : '',
             filter: 'agTextColumnFilter',
-            headerComponent: 'customHeader', // Use the custom header component
-            headerComponentParams: { displayName: mainText, tooltipField: comments }, // Pass parameters to the custom header component
-            autoHeight: isSourcesColumn, // Enable auto-height for the specific column
+            headerComponent: CustomHeader,
+            headerComponentParams: { displayName: mainText, tooltipField: comments },
+            autoHeight: isSourcesColumn,
             cellClassRules: {
               'cell-true': params => params.value === 'TRUE',
               'cell-false': params => params.value === 'FALSE'
@@ -57,7 +59,7 @@ const DataTable = () => {
         const transformedData = processedData.map(row => {
           const newRow = {};
           Object.keys(row).forEach(key => {
-            const modifiedKey = key.replace(/\./g, '_'); // Replace periods with underscores
+            const modifiedKey = key.replace(/\./g, '_');
             newRow[modifiedKey] = row[key];
           });
           return newRow;
@@ -86,6 +88,8 @@ const DataTable = () => {
     return <div>No data available</div>;
   }
 
+  const pageSizeOptions = [10, 20, 50,100,1000];
+
   return (
     <div className="ag-theme-alpine" style={{ height: '600px', width: '100%' }}>
       <AgGridReact
@@ -94,9 +98,11 @@ const DataTable = () => {
         defaultColDef={{ flex: 1, minWidth: 200, filter: true }}
         pagination={true}
         paginationPageSize={10}
+        paginationPageSizeSelector={pageSizeOptions}
         domLayout='autoHeight'
         frameworkComponents={{
           customHeader: CustomHeader,
+          customCell: CustomCell,
         }}
       />
     </div>
