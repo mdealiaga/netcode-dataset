@@ -53,7 +53,7 @@ export const modelData = {
         { value: "InstantHit", label: "Instant Hit Detection" },
         { value: "Responsive", label: "Responsive Combat" }
       ],
-      info: "Basic Combat: Enable basic combat features.<br />Instant Hit Detection: This option is for games where a player needs to hit another player instantly (e.g., FPS games). These require server-side rewind algorithms to reconcile latency.<br />Responsive Combat: This option is for games that need extremely responsive combat (e.g., fighting games). These prioritize player input and use rollback algorithms."
+      info: "Basic Combat: Instant registration is not required (travel time, casting time, etc). Most games other than Competitive FPS and Fighting games. <br />Instant Hit Detection: This option is for games where a player needs to hit another player instantly (e.g., FPS games). These require server-side rewind algorithms to reconcile latency.<br />Responsive Combat: This option is for games that need extremely responsive combat (e.g., fighting games). These prioritize player input and use rollback algorithms."
     }
   };
   
