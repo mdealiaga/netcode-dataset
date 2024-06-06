@@ -1,33 +1,35 @@
-import { scoringConfig, primaryProfiles, secondaryProfiles, getSizeIndex } from './config';
+import { scoringConfig, primaryProfiles, secondaryProfiles } from './config';
 
-const calculateScore = (criteria, modelCriteria, config) => {
-  let score = 10;
+const calculateScore = (criteria, modelCriteria, config, modelName) => {
+  let score = 100;
+  const penalties = [];
 
   Object.keys(config).forEach(key => {
     if (modelCriteria[key] !== undefined) {
-      if (config[key].isSizeDependent) {
-        const criteriaIndex = getSizeIndex(criteria[key]);
-        const modelCriteriaIndex = getSizeIndex(modelCriteria[key]);
-        if (criteriaIndex > modelCriteriaIndex) { // Penalize if criteria size is larger
+      if (Array.isArray(modelCriteria[key])) {
+        if (!modelCriteria[key].includes(criteria[key])) {
+          penalties.push(`${key}: ${config[key].mismatchPenalty}`);
           score -= config[key].mismatchPenalty;
         }
       } else if (modelCriteria[key] !== criteria[key]) {
+        penalties.push(`${key}: ${config[key].mismatchPenalty}`);
         score -= config[key].mismatchPenalty;
       }
     }
   });
 
+  console.log(`Final score for ${modelName}: ${score} (Penalties applied: ${penalties.join(', ')})`);
   return Math.max(score, 0);
 };
 
 const combineSecondaryProfiles = (criteria, primaryProfileName, secondaryProfiles, config) => {
-  const validCombinations = [];
+  const validCombinations = new Map();
   const secondaryCount = secondaryProfiles.length;
 
   // Generate all combinations of secondary profiles
   for (let i = 1; i < (1 << secondaryCount); i++) {
     let combinedCriteria = {};
-    let combinedScore = 0;
+    let combinedScore = 100; // Start with the max score for secondary profiles
     let names = [];
 
     for (let j = 0; j < secondaryCount; j++) {
@@ -35,31 +37,29 @@ const combineSecondaryProfiles = (criteria, primaryProfileName, secondaryProfile
         const profile = secondaryProfiles[j];
         if (profile.allowedPrimaryProfiles.includes(primaryProfileName)) {
           combinedCriteria = { ...combinedCriteria, ...profile.criteria };
-          combinedScore += calculateScore(criteria, profile.criteria, config);
+          combinedScore = Math.min(combinedScore, calculateScore(criteria, profile.criteria, config, profile.name));
           names.push(profile.name);
         }
       }
     }
 
     if (names.length > 0) {
-      validCombinations.push({
-        name: names.join(" and "),
-        score: combinedScore
-      });
+      validCombinations.set(names.join(" and "), combinedScore);
     }
   }
 
-  return validCombinations;
+  return Array.from(validCombinations.entries()).map(([name, score]) => ({ name, score }));
 };
 
 export const recommendNetworkModel = (criteria) => {
   const primaryResults = primaryProfiles.flatMap(profile => {
     const subModelResults = profile.subModels.map(subModel => {
       const combinedCriteria = { ...profile.criteria, ...subModel.criteria };
-      const score = calculateScore(criteria, combinedCriteria, scoringConfig);
+      const score = calculateScore(criteria, combinedCriteria, scoringConfig, `${profile.name} - ${subModel.name}`);
       return {
         name: `${profile.name} - ${subModel.name}`,
-        score
+        score,
+        recommendLibraryIfSmallTeam: subModel.recommendLibraryIfSmallTeam
       };
     }).filter(result => result.score > 0);
 
@@ -67,7 +67,8 @@ export const recommendNetworkModel = (criteria) => {
     if (subModelResults.length === 0) {
       const profileResult = {
         name: profile.name,
-        score: calculateScore(criteria, profile.criteria, scoringConfig)
+        score: calculateScore(criteria, profile.criteria, scoringConfig, profile.name),
+        recommendLibraryIfSmallTeam: profile.recommendLibraryIfSmallTeam
       };
       if (profileResult.score > 0) {
         return [profileResult];
@@ -77,15 +78,31 @@ export const recommendNetworkModel = (criteria) => {
     return subModelResults;
   });
 
-  const combinedResults = primaryResults.flatMap(primary => {
-    const secondaryCombinations = combineSecondaryProfiles(criteria, primary.name.split(' - ')[0], secondaryProfiles, scoringConfig);
-    return secondaryCombinations.map(secondary => {
-      return {
-        name: `${primary.name} with ${secondary.name}`,
-        score: primary.score + secondary.score
-      };
-    });
+  const combinedResults = new Map();
+
+  primaryResults.forEach(primary => {
+    if (criteria.devTeamSize === "Small" && !primary.recommendLibraryIfSmallTeam) {
+      // Only add the primary profile without third-party libraries if the team is small and no third-party library is recommended
+      const primaryName = `${primary.name}`;
+      if (!combinedResults.has(primaryName) || combinedResults.get(primaryName) < primary.score) {
+        combinedResults.set(primaryName, primary.score);
+      }
+    } else {
+      // Combine with secondary profiles
+      const secondaryCombinations = combineSecondaryProfiles(criteria, primary.name.split(' - ')[0], secondaryProfiles, scoringConfig);
+      secondaryCombinations.forEach(secondary => {
+        const combinedName = `${primary.name} with ${secondary.name}`;
+        const combinedScore = primary.score + secondary.score - 100; // Adjust the combination logic to properly account for the secondary score
+        if (!combinedResults.has(combinedName) || combinedResults.get(combinedName) < combinedScore) {
+          combinedResults.set(combinedName, combinedScore);
+        }
+      });
+    }
   });
 
-  return combinedResults.sort((a, b) => b.score - a.score);
+  // Convert the Map to an array and ensure score doesn't exceed 100
+  return Array.from(combinedResults.entries()).map(([name, score]) => ({
+    name,
+    score: Math.min(score, 100)
+  })).sort((a, b) => b.score - a.score);
 };

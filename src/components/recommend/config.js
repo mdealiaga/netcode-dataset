@@ -1,39 +1,35 @@
-const sizeOrder = ["Small", "Medium", "Large"];
-
 export const scoringConfig = {
-  lobbySize: { mismatchPenalty: 5, isSizeDependent: true },
-  gameType: { mismatchPenalty: 2 },
-  onlineEconomy: { mismatchPenalty: 5 },
-  devTeamSize: { mismatchPenalty: 2, isSizeDependent: true },
-  manyEntities: { mismatchPenalty: 2 },
-  combatOption: { mismatchPenalty: 2 },
-  playerInteractionLevel: { mismatchPenalty: 5 }
+  lobbySize: { mismatchPenalty: 20 },
+  gameType: { mismatchPenalty: 20 },
+  onlineEconomy: { mismatchPenalty: 20 },
+  devTeamSize: { mismatchPenalty: 10 },
+  manyEntities: { mismatchPenalty: 20 },
+  combatOption: { mismatchPenalty: 20 },
+  playerInteractionLevel: { mismatchPenalty: 20 }
 };
 
 export const primaryProfiles = [
   {
     name: "Client-Server",
     subModels: [
-      { name: "Relay", criteria: { lobbySize: "Small", gameType: "Competitive", combatOption: "Responsive" } },
-      { name: "Full-Auth", criteria: { gameType: "Competitive", onlineEconomy: true } },
-      { name: "Hybrid", criteria: { gameType: "Competitive", onlineEconomy: true } }
+      { name: "Relay", criteria: {  gameType: "Casual"}, recommendLibraryIfSmallTeam: false, playerInteractionLevel: "None" },
+      { name: "Full-Auth", criteria: { gameType: "Competitive", onlineEconomy: true }, recommendLibraryIfSmallTeam: true },
+      { name: "Hybrid", criteria: { gameType: "Competitive", onlineEconomy: true }, recommendLibraryIfSmallTeam: false }
     ],
-    criteria: { lobbySize: "Large", manyEntities: false }
+    criteria: { lobbySize: ["Small", "Medium", "Large"], manyEntities: false }
   },
   {
     name: "P2P",
     subModels: [
-      { name: "Deterministic Lockstep", criteria: { manyEntities: true } },
-      { name: "Rollback", criteria: { combatOption: "Responsive" } }
+      { name: "Deterministic Lockstep", criteria: { manyEntities: true, lobbySize: ["Small"], gameType: "Competitive" }, recommendLibraryIfSmallTeam: true },
+      { name: "Rollback", criteria: { combatOption: "Responsive", lobbySize: ["Small"], gameType: "Competitive" }, recommendLibraryIfSmallTeam: true }
     ],
-    criteria: { lobbySize: "Small" }
-  },
-  { name: "Arbitrer (Photon Quantum)", subModels: [], criteria: { devTeamSize: "Small" } }
+    criteria: { lobbySize: ["Small"] }
+  }
 ];
 
 export const secondaryProfiles = [
   { name: "Server Side Rewind", criteria: { combatOption: "InstantHit" }, allowedPrimaryProfiles: ["Client-Server"] },
-  { name: "Interest Management", criteria: { manyEntities: true }, allowedPrimaryProfiles: ["Client-Server", "P2P"] }
+  { name: "Interest Management", criteria: { lobbySize: ["Medium", "Large"] }, allowedPrimaryProfiles: ["Client-Server", "P2P"] },
+  { name: "Third Party Library", criteria: { devTeamSize: ["Small"] }, allowedPrimaryProfiles: ["Client-Server", "P2P"] }
 ];
-
-export const getSizeIndex = (size) => sizeOrder.indexOf(size);
