@@ -97,7 +97,7 @@
   text-decoration: underline;
 }
 
-/* Additional styles for RecommendationForm */
+/* Recommendation */
 
 .form-group {
   display: flex;
@@ -106,7 +106,6 @@
   margin-bottom: 1em;
 }
 
-/* Styling for button groups */
 .button-group {
   display: flex;
   flex-wrap: wrap;
@@ -130,25 +129,23 @@ button {
   background-color: white;
   border-radius: 4px;
   transition: background-color 0.1s ease, border-color 0.1s ease;
-  color: #212735; /* Match the theme */
+  color: #212735; 
 }
 
 button.selected {
   background-color: lightblue;
   border-color: #007BFF;
-  color: #212735; /* Match the theme */
+  color: #212735; 
 }
 
 button:hover:not(.selected) {
   background-color: #f0f0f0;
 }
 
-/* Ensure hover does not override selected state */
 button.selected:hover {
   background-color: lightblue;
 }
 
-/* Distinct styling for ? buttons */
 button.info-button {
   background-color: #61dafb;
   color: #212735;
@@ -162,12 +159,11 @@ button.info-button {
   margin-left: 10px;
 }
 
-/* Styling for radio groups as buttons */
 .radio-label {
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: #e0e0e0; /* Match the theme */
+  color: #e0e0e0; 
   margin: 0 10px;
 }
 
@@ -183,7 +179,7 @@ input[type="radio"] {
   cursor: pointer;
   position: relative;
   margin-right: 10px;
-  background-color: #212735; /* Match the theme */
+  background-color: #212735; 
 }
 
 input[type="radio"]:checked::before {
@@ -196,4 +192,9 @@ input[type="radio"]:checked::before {
   position: absolute;
   top: 2px;
   left: 2px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 5px;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { modelData } from './modelData';
 
 const RecommendationForm = ({ onRecommend }) => {
@@ -9,6 +9,9 @@ const RecommendationForm = ({ onRecommend }) => {
 
   const [formState, setFormState] = useState(initialState);
   const [showInfo, setShowInfo] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const toggleInfo = (key) => {
     setShowInfo(prevShowInfo => ({ ...prevShowInfo, [key]: !prevShowInfo[key] }));
@@ -31,14 +34,39 @@ const RecommendationForm = ({ onRecommend }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onRecommend(formState);
+    setHasSubmitted(true);
+    if (isFormValid) {
+      onRecommend(formState);
+    }
   };
+
+  useEffect(() => {
+    // Validate form
+    const newErrors = {};
+    const isValid = Object.keys(modelData).every((key) => {
+      if (modelData[key].type === 'checkbox') {
+        return true; // Checkboxes are optional
+      }
+      if (key === "combatOption" && formState.playerInteractionLevel !== "Combat") {
+        return true; // Combat option is only required if playerInteractionLevel is "Combat"
+      }
+      if (formState[key] === '') {
+        newErrors[key] = 'Please select an option.';
+        return false;
+      }
+      return true;
+    });
+
+    setErrors(newErrors);
+    setIsFormValid(isValid);
+  }, [formState]);
 
   return (
     <form onSubmit={handleSubmit}>
       {Object.keys(modelData).map((key) => {
         const field = modelData[key];
 
+        // Render combatOption conditionally
         if (key === "combatOption" && formState.playerInteractionLevel !== "Combat") {
           return null;
         }
@@ -78,10 +106,13 @@ const RecommendationForm = ({ onRecommend }) => {
             {showInfo[key] && (
               <p dangerouslySetInnerHTML={{ __html: field.info.replace(/\n/g, '<br />') }} />
             )}
+            {hasSubmitted && errors[key] && (
+              <p className="error-message">{errors[key]}</p>
+            )}
           </div>
         );
       })}
-      <button type="submit">Get Recommendations</button>
+      <button type="submit" disabled={!isFormValid && hasSubmitted}>Get Recommendations</button>
     </form>
   );
 };
