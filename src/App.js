@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
 import DataTable from './components/DataTable';
-import Recommendations from './components/Recommendations';
+import Recommendations from './components/recommend/Recommendations';
 import './App.css';
 
 function Header() {

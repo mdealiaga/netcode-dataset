@@ -11,7 +11,8 @@ const RecommendationForm = ({ onRecommend }) => {
   const [showInfo, setShowInfo] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [errors, setErrors] = useState({});
-  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleInfo = (key) => {
     setShowInfo(prevShowInfo => ({ ...prevShowInfo, [key]: !prevShowInfo[key] }));
@@ -23,6 +24,14 @@ const RecommendationForm = ({ onRecommend }) => {
       ...formState,
       [name]: type === 'checkbox' ? checked : value
     });
+    // Clear errors as user corrects them
+    if (errors[name]) {
+      setErrors(prevErrors => {
+        const newErrors = { ...prevErrors };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleButtonClick = (name, value) => {
@@ -30,18 +39,27 @@ const RecommendationForm = ({ onRecommend }) => {
       ...prevState,
       [name]: value
     }));
+    if (errors[name]) {
+      setErrors(prevErrors => {
+        const newErrors = { ...prevErrors };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setHasSubmitted(true);
-    if (isFormValid) {
+    setAttemptedSubmit(true); // Mark that a submit attempt was made
+    if (isFormValid && !isSubmitting) {
+      setIsSubmitting(true); // Prevent multiple submissions
+      console.log("Form State on Submit: ", formState); // Debugging
       onRecommend(formState);
+      setIsSubmitting(false); // Reset after submission
     }
   };
 
   useEffect(() => {
-    // Validate form
     const newErrors = {};
     const isValid = Object.keys(modelData).every((key) => {
       if (modelData[key].type === 'checkbox') {
@@ -66,7 +84,6 @@ const RecommendationForm = ({ onRecommend }) => {
       {Object.keys(modelData).map((key) => {
         const field = modelData[key];
 
-        // Render combatOption conditionally
         if (key === "combatOption" && formState.playerInteractionLevel !== "Combat") {
           return null;
         }
@@ -106,13 +123,13 @@ const RecommendationForm = ({ onRecommend }) => {
             {showInfo[key] && (
               <p dangerouslySetInnerHTML={{ __html: field.info.replace(/\n/g, '<br />') }} />
             )}
-            {hasSubmitted && errors[key] && (
+            {attemptedSubmit && errors[key] && (
               <p className="error-message">{errors[key]}</p>
             )}
           </div>
         );
       })}
-      <button type="submit" disabled={!isFormValid && hasSubmitted}>Get Recommendations</button>
+      <button type="submit" disabled={!isFormValid}>Get Recommendations</button>
     </form>
   );
 };
