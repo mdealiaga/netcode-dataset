@@ -32,6 +32,16 @@ export const modelData = {
       type: "checkbox",
       info: "This option is for games that have many entities per player (e.g., RTS games). These require algorithms that use low bandwidth per entity."
     },
+    playerInteractionLevel: {
+      label: "Player Interaction Level",
+      options: [
+        { value: "None", label: "No Interaction Between Players (e.g., racing game without collision)" },
+        { value: "Collision", label: "Collision Between Players (e.g., Fall Guys)" },
+        { value: "Combat", label: "Players Can Hurt Each Other (e.g., Fortnite)" }
+      ]
+    },
+    // basic combat 
+    // for example WoW where a hit is guaranteed if certain checks are passed, or a game where a projectile is created that can be dodged
     instantHit: {
       label: "Instant Hit Detection",
       type: "checkbox",
@@ -41,21 +51,6 @@ export const modelData = {
       label: "Responsive Combat",
       type: "checkbox",
       info: "This option is for games that need extremely responsive combat (e.g., fighting games). These prioritize player input and use rollback algorithms."
-    },
-    noInteractionBetweenPlayers: {
-        label: "No Interaction Between Players",
-        type: "checkbox",
-        info: "This option is for games where players can see each other, but do not collide or hurt each other"
-      }
-      /*
-        Level of interaction:
-        - No Interaction Between Players (For example, racing game without collision)
-        - Collision betwen Players (For example, Fall Guys)
-        - Players can hurt each other (For example, Fortnite)
-      */
-
-      /*
-        if interaction is hurt each other, ask about responsiveCombt and instantHit
-      */
+    }
   };
   

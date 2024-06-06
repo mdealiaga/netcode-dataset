@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import RecommendationForm from './RecommendationForm'; 
-import RecommendationList from './RecommendationList'; 
-import { recommendNetworkModel } from './recommendationLogic'; 
+import RecommendationForm from './RecommendationForm'; // Ensure this matches the actual file name
+import RecommendationList from './RecommendationList'; // Ensure this matches the actual file name
+import { recommendNetworkModel } from './recommendationLogic'; // Ensure this matches the actual file name
 
 const Recommendations = () => {
   const [recommendations, setRecommendations] = useState([]);

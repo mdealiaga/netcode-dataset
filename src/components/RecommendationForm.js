@@ -30,6 +30,9 @@ const RecommendationForm = ({ onRecommend }) => {
   return (
     <form onSubmit={handleSubmit}>
       {Object.keys(modelData).map((key) => {
+        // Skip rendering "instantHit" and "responsiveCombat" by default
+        if (key === "instantHit" || key === "responsiveCombat") return null;
+
         const field = modelData[key];
         return (
           <div key={key}>
@@ -61,6 +64,37 @@ const RecommendationForm = ({ onRecommend }) => {
           </div>
         );
       })}
+      {formState.playerInteractionLevel === "Combat" && (
+        <>
+          <div>
+            <label>
+              Responsive Combat:
+              <input
+                type="checkbox"
+                name="responsiveCombat"
+                checked={formState.responsiveCombat}
+                onChange={handleChange}
+              />
+              <button type="button" onClick={() => toggleInfo('responsiveCombat')}>?</button>
+            </label>
+            {showInfo.responsiveCombat && <p>{modelData.responsiveCombat.info}</p>}
+          </div>
+          <br />
+          <div>
+            <label>
+              Instant Hit Detection:
+              <input
+                type="checkbox"
+                name="instantHit"
+                checked={formState.instantHit}
+                onChange={handleChange}
+              />
+              <button type="button" onClick={() => toggleInfo('instantHit')}>?</button>
+            </label>
+            {showInfo.instantHit && <p>{modelData.instantHit.info}</p>}
+          </div>
+        </>
+      )}
       <button type="submit">Get Recommendations</button>
     </form>
   );
