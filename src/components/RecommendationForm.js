@@ -23,10 +23,10 @@ const RecommendationForm = ({ onRecommend }) => {
   };
 
   const handleButtonClick = (name, value) => {
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       [name]: value
-    });
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -37,74 +37,50 @@ const RecommendationForm = ({ onRecommend }) => {
   return (
     <form onSubmit={handleSubmit}>
       {Object.keys(modelData).map((key) => {
-        // Skip rendering "instantHit", "responsiveCombat", and "combatOption" by default
-        if (key === "instantHit" || key === "responsiveCombat" || key === "combatOption") return null;
-
         const field = modelData[key];
+
+        if (key === "combatOption" && formState.playerInteractionLevel !== "Combat") {
+          return null;
+        }
+
         return (
-          <div key={key}>
-            <label>
-              {field.label}:
-              {field.type === 'checkbox' ? (
-                <>
-                  <input
-                    type="checkbox"
-                    name={key}
-                    checked={formState[key]}
-                    onChange={handleChange}
-                  />
-                  {field.info && (
-                    <button type="button" onClick={() => toggleInfo(key)}>?</button>
-                  )}
-                </>
-              ) : field.type === 'buttons' ? (
-                <div>
-                  {field.options.map(option => (
-                    <button
-                      type="button"
-                      key={option.value}
-                      onClick={() => handleButtonClick(key, option.value)}
-                      style={{
-                        backgroundColor: formState[key] === option.value ? 'lightblue' : 'white',
-                        border: '1px solid #ccc',
-                        margin: '0 5px'
-                      }}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <select name={key} value={formState[key]} onChange={handleChange}>
-                  <option value="">Select {field.label}</option>
-                  {field.options.map(option => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                  ))}
-                </select>
-              )}
-            </label>
-            {showInfo[key] && <p>{field.info}</p>}
-            <br />
+          <div key={key} className="form-group">
+            <label>{field.label}:</label>
+            {field.type === 'checkbox' ? (
+              <div className="checkbox-group">
+                <input
+                  type="checkbox"
+                  name={key}
+                  checked={formState[key]}
+                  onChange={handleChange}
+                />
+                {field.info && (
+                  <button type="button" className="info-button" onClick={() => toggleInfo(key)}>?</button>
+                )}
+              </div>
+            ) : (
+              <div className="button-group">
+                {field.options.map(option => (
+                  <button
+                    type="button"
+                    key={option.value}
+                    onClick={() => handleButtonClick(key, option.value)}
+                    className={formState[key] === option.value ? 'selected' : ''}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+                {field.info && (
+                  <button type="button" className="info-button" onClick={() => toggleInfo(key)}>?</button>
+                )}
+              </div>
+            )}
+            {showInfo[key] && (
+              <p dangerouslySetInnerHTML={{ __html: field.info.replace(/\n/g, '<br />') }} />
+            )}
           </div>
         );
       })}
-      {formState.playerInteractionLevel === "Combat" && (
-        <div>
-          <label>
-            Combat Option:
-            <select name="combatOption" value={formState.combatOption} onChange={handleChange}>
-              <option value="">Select Combat Option</option>
-              {modelData.combatOption.options.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
-            <button type="button" onClick={() => toggleInfo('combatOption')}>?</button>
-          </label>
-          {showInfo.combatOption && (
-            <p dangerouslySetInnerHTML={{ __html: modelData.combatOption.info.replace(/\n/g, '<br />') }} />
-          )}
-        </div>
-      )}
       <button type="submit">Get Recommendations</button>
     </form>
   );

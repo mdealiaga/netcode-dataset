@@ -10,6 +10,7 @@ export const modelData = {
     },
     gameType: {
       label: "Game Type",
+      type: "radio",
       options: [
         { value: "Casual", label: "Casual" },
         { value: "Competitive", label: "Competitive" },
@@ -18,7 +19,8 @@ export const modelData = {
     },
     onlineEconomy: {
       label: "Online Economy",
-      type: "checkbox"
+      type: "checkbox",
+      info: "Online economy involves trading items of value and having scarcity, which needs protection against cheating."
     },
     devTeamSize: {
       label: "Development Team Size",
@@ -36,6 +38,7 @@ export const modelData = {
     },
     playerInteractionLevel: {
       label: "Player Interaction Level",
+      type: "radio",
       options: [
         { value: "None", label: "No Interaction Between Players (e.g., racing game without collision)" },
         { value: "Collision", label: "Collision Between Players (e.g., Fall Guys)" },
@@ -44,12 +47,13 @@ export const modelData = {
     },
     combatOption: {
       label: "Combat Option",
+      type: "radio",
       options: [
         { value: "Basic", label: "Basic Combat" },
         { value: "InstantHit", label: "Instant Hit Detection" },
         { value: "Responsive", label: "Responsive Combat" }
       ],
-      info: "Basic Combat: Enable basic combat features.\nInstant Hit Detection: This option is for games where a player needs to hit another player instantly (e.g., FPS games). These require server-side rewind algorithms to reconcile latency.\nResponsive Combat: This option is for games that need extremely responsive combat (e.g., fighting games). These prioritize player input and use rollback algorithms."
+      info: "Basic Combat: Enable basic combat features.<br />Instant Hit Detection: This option is for games where a player needs to hit another player instantly (e.g., FPS games). These require server-side rewind algorithms to reconcile latency.<br />Responsive Combat: This option is for games that need extremely responsive combat (e.g., fighting games). These prioritize player input and use rollback algorithms."
     }
   };
   

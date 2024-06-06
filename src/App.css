@@ -1,11 +1,11 @@
 .App {
   text-align: center;
-  background-color: #212735; 
-  color: #e0e0e0; 
+  background-color: #212735;
+  color: #e0e0e0;
 }
 
 .App-header {
-  background-color: #212735; 
+  background-color: #212735;
   padding: 10px 20px;
   display: flex;
   justify-content: center;
@@ -33,7 +33,7 @@
 .header-title {
   margin: 0;
   font-size: 1.5em;
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 .download-icon {
@@ -57,7 +57,7 @@
 }
 
 .ag-cell a {
-  color: #61dafb; 
+  color: #61dafb;
   text-decoration: none;
 }
 
@@ -66,14 +66,15 @@
 }
 
 .cell-true {
-  background-color: #42A5F5; 
+  background-color: #42A5F5;
   color: white;
 }
 
 .cell-false {
-  background-color: #BA68C8; 
+  background-color: #BA68C8;
   color: white;
 }
+
 .ag-header-cell {
   white-space: normal !important;
   padding: 4px;
@@ -89,9 +90,110 @@
 
 .ag-header-cell a {
   word-break: break-all;
-  color: #61dafb; 
+  color: #61dafb;
 }
 
 .ag-header-cell a:hover {
   text-decoration: underline;
+}
+
+/* Additional styles for RecommendationForm */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+/* Styling for button groups */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkbox-group,
+.radio-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button {
+  border: 1px solid #ccc;
+  margin: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: white;
+  border-radius: 4px;
+  transition: background-color 0.1s ease, border-color 0.1s ease;
+  color: #212735; /* Match the theme */
+}
+
+button.selected {
+  background-color: lightblue;
+  border-color: #007BFF;
+  color: #212735; /* Match the theme */
+}
+
+button:hover:not(.selected) {
+  background-color: #f0f0f0;
+}
+
+/* Ensure hover does not override selected state */
+button.selected:hover {
+  background-color: lightblue;
+}
+
+/* Distinct styling for ? buttons */
+button.info-button {
+  background-color: #61dafb;
+  color: #212735;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+/* Styling for radio groups as buttons */
+.radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #e0e0e0; /* Match the theme */
+  margin: 0 10px;
+}
+
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  margin-right: 10px;
+  background-color: #212735; /* Match the theme */
+}
+
+input[type="radio"]:checked::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #007BFF;
+  position: absolute;
+  top: 2px;
+  left: 2px;
 }
