@@ -40,17 +40,14 @@ export const modelData = {
         { value: "Combat", label: "Players Can Hurt Each Other (e.g., Fortnite)" }
       ]
     },
-    // basic combat 
-    // for example WoW where a hit is guaranteed if certain checks are passed, or a game where a projectile is created that can be dodged
-    instantHit: {
-      label: "Instant Hit Detection",
-      type: "checkbox",
-      info: "This option is for games where a player needs to hit another player instantly (e.g., FPS games). These require server-side rewind algorithms to reconcile latency."
-    },
-    responsiveCombat: {
-      label: "Responsive Combat",
-      type: "checkbox",
-      info: "This option is for games that need extremely responsive combat (e.g., fighting games). These prioritize player input and use rollback algorithms."
+    combatOption: {
+      label: "Combat Option",
+      options: [
+        { value: "Basic", label: "Basic Combat" },
+        { value: "InstantHit", label: "Instant Hit Detection" },
+        { value: "Responsive", label: "Responsive Combat" }
+      ],
+      info: "Basic Combat: Enable basic combat features.\nInstant Hit Detection: This option is for games where a player needs to hit another player instantly (e.g., FPS games). These require server-side rewind algorithms to reconcile latency.\nResponsive Combat: This option is for games that need extremely responsive combat (e.g., fighting games). These prioritize player input and use rollback algorithms."
     }
   };
   

@@ -1,4 +1,4 @@
-export const recommendNetworkModel = ({ lobbySize, gameType, onlineEconomy, devTeamSize, manyEntities, instantHit, responsiveCombat, playerInteractionLevel }) => {
+export const recommendNetworkModel = ({ lobbySize, gameType, onlineEconomy, devTeamSize, manyEntities, combatOption, playerInteractionLevel }) => {
   const profiles = [
     {
       name: "Client-Server",
@@ -29,19 +29,18 @@ export const recommendNetworkModel = ({ lobbySize, gameType, onlineEconomy, devT
     if (modelCriteria.onlineEconomy !== undefined && modelCriteria.onlineEconomy !== criteria.onlineEconomy) score -= 5;
     if (modelCriteria.devTeamSize && modelCriteria.devTeamSize !== criteria.devTeamSize) score -= 2;
     if (modelCriteria.manyEntities !== undefined && modelCriteria.manyEntities !== criteria.manyEntities) score -= 2;
-    if (modelCriteria.instantHit !== undefined && modelCriteria.instantHit !== criteria.instantHit) score -= 2;
-    if (modelCriteria.responsiveCombat !== undefined && modelCriteria.responsiveCombat !== criteria.responsiveCombat) score -= 5;
+    if (modelCriteria.combatOption && modelCriteria.combatOption !== criteria.combatOption) score -= 2;
     if (modelCriteria.playerInteractionLevel && modelCriteria.playerInteractionLevel !== criteria.playerInteractionLevel) score -= 5;
 
     return Math.max(score, 0);
   };
 
   const results = profiles.flatMap(profile => {
-    const profileScore = calculateScore({ lobbySize, gameType, onlineEconomy, devTeamSize, manyEntities, instantHit, responsiveCombat, playerInteractionLevel }, profile.criteria);
+    const profileScore = calculateScore({ lobbySize, gameType, onlineEconomy, devTeamSize, manyEntities, combatOption, playerInteractionLevel }, profile.criteria);
     const subModelResults = profile.subModels
       ? profile.subModels.map(subModel => ({
           name: `${profile.name} - ${subModel.name}`,
-          score: profileScore + calculateScore({ lobbySize, gameType, onlineEconomy, devTeamSize, manyEntities, instantHit, responsiveCombat, playerInteractionLevel }, subModel.criteria)
+          score: profileScore + calculateScore({ lobbySize, gameType, onlineEconomy, devTeamSize, manyEntities, combatOption, playerInteractionLevel }, subModel.criteria)
         })).filter(result => result.score > 0)
       : [];
 

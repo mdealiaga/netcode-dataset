@@ -30,8 +30,8 @@ const RecommendationForm = ({ onRecommend }) => {
   return (
     <form onSubmit={handleSubmit}>
       {Object.keys(modelData).map((key) => {
-        // Skip rendering "instantHit" and "responsiveCombat" by default
-        if (key === "instantHit" || key === "responsiveCombat") return null;
+        // Skip rendering "instantHit", "responsiveCombat", and "combatOption" by default
+        if (key === "instantHit" || key === "responsiveCombat" || key === "combatOption") return null;
 
         const field = modelData[key];
         return (
@@ -65,35 +65,19 @@ const RecommendationForm = ({ onRecommend }) => {
         );
       })}
       {formState.playerInteractionLevel === "Combat" && (
-        <>
-          <div>
-            <label>
-              Responsive Combat:
-              <input
-                type="checkbox"
-                name="responsiveCombat"
-                checked={formState.responsiveCombat}
-                onChange={handleChange}
-              />
-              <button type="button" onClick={() => toggleInfo('responsiveCombat')}>?</button>
-            </label>
-            {showInfo.responsiveCombat && <p>{modelData.responsiveCombat.info}</p>}
-          </div>
-          <br />
-          <div>
-            <label>
-              Instant Hit Detection:
-              <input
-                type="checkbox"
-                name="instantHit"
-                checked={formState.instantHit}
-                onChange={handleChange}
-              />
-              <button type="button" onClick={() => toggleInfo('instantHit')}>?</button>
-            </label>
-            {showInfo.instantHit && <p>{modelData.instantHit.info}</p>}
-          </div>
-        </>
+        <div>
+          <label>
+            Combat Option:
+            <select name="combatOption" value={formState.combatOption} onChange={handleChange}>
+              <option value="">Select Combat Option</option>
+              {modelData.combatOption.options.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+            <button type="button" onClick={() => toggleInfo('combatOption')}>?</button>
+          </label>
+          {showInfo.combatOption && <p>{modelData.combatOption.info}</p>}
+        </div>
       )}
       <button type="submit">Get Recommendations</button>
     </form>
