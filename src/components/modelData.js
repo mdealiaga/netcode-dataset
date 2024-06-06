@@ -1,6 +1,7 @@
 export const modelData = {
     lobbySize: {
       label: "Lobby Size",
+      type: "buttons",
       options: [
         { value: "Small", label: "Small (<=10)" },
         { value: "Medium", label: "Medium (<=100)" },
@@ -21,6 +22,7 @@ export const modelData = {
     },
     devTeamSize: {
       label: "Development Team Size",
+      type: "buttons",
       options: [
         { value: "Small", label: "Small (1-3)" },
         { value: "Medium", label: "Medium (4-10)" },

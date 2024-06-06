@@ -22,6 +22,13 @@ const RecommendationForm = ({ onRecommend }) => {
     });
   };
 
+  const handleButtonClick = (name, value) => {
+    setFormState({
+      ...formState,
+      [name]: value
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onRecommend(formState);
@@ -50,6 +57,23 @@ const RecommendationForm = ({ onRecommend }) => {
                     <button type="button" onClick={() => toggleInfo(key)}>?</button>
                   )}
                 </>
+              ) : field.type === 'buttons' ? (
+                <div>
+                  {field.options.map(option => (
+                    <button
+                      type="button"
+                      key={option.value}
+                      onClick={() => handleButtonClick(key, option.value)}
+                      style={{
+                        backgroundColor: formState[key] === option.value ? 'lightblue' : 'white',
+                        border: '1px solid #ccc',
+                        margin: '0 5px'
+                      }}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               ) : (
                 <select name={key} value={formState[key]} onChange={handleChange}>
                   <option value="">Select {field.label}</option>
@@ -76,7 +100,9 @@ const RecommendationForm = ({ onRecommend }) => {
             </select>
             <button type="button" onClick={() => toggleInfo('combatOption')}>?</button>
           </label>
-          {showInfo.combatOption && <p>{modelData.combatOption.info}</p>}
+          {showInfo.combatOption && (
+            <p dangerouslySetInnerHTML={{ __html: modelData.combatOption.info.replace(/\n/g, '<br />') }} />
+          )}
         </div>
       )}
       <button type="submit">Get Recommendations</button>
