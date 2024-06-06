@@ -10,26 +10,30 @@ export const scoringConfig = {
   playerInteractionLevel: { mismatchPenalty: 5 }
 };
 
-export const profiles = [
+export const primaryProfiles = [
   {
     name: "Client-Server",
     subModels: [
       { name: "Relay", criteria: { lobbySize: "Small", gameType: "Competitive", combatOption: "Responsive" } },
       { name: "Full-Auth", criteria: { gameType: "Competitive", onlineEconomy: true } },
-      { name: "Hybrid", criteria: { gameType: "Competitive", onlineEconomy: true } },
-      { name: "Server Side Rewind", criteria: { combatOption: "InstantHit" } }
+      { name: "Hybrid", criteria: { gameType: "Competitive", onlineEconomy: true } }
     ],
     criteria: { lobbySize: "Large", manyEntities: false }
   },
   {
     name: "P2P",
     subModels: [
-      { name: "Deterministic Lockstep", criteria: { manyEntities: true} },
-      { name: "Rollback", criteria: { combatOption: "Responsive"} }
+      { name: "Deterministic Lockstep", criteria: { manyEntities: true } },
+      { name: "Rollback", criteria: { combatOption: "Responsive" } }
     ],
     criteria: { lobbySize: "Small" }
   },
   { name: "Arbitrer (Photon Quantum)", subModels: [], criteria: { devTeamSize: "Small" } }
+];
+
+export const secondaryProfiles = [
+  { name: "Server Side Rewind", criteria: { combatOption: "InstantHit" }, allowedPrimaryProfiles: ["Client-Server"] },
+  { name: "Interest Management", criteria: { manyEntities: true }, allowedPrimaryProfiles: ["Client-Server", "P2P"] }
 ];
 
 export const getSizeIndex = (size) => sizeOrder.indexOf(size);

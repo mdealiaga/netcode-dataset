@@ -53,7 +53,6 @@ const RecommendationForm = ({ onRecommend }) => {
     setAttemptedSubmit(true); // Mark that a submit attempt was made
     if (isFormValid && !isSubmitting) {
       setIsSubmitting(true); // Prevent multiple submissions
-      console.log("Form State on Submit: ", formState); // Debugging
       onRecommend(formState);
       setIsSubmitting(false); // Reset after submission
     }

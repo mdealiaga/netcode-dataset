@@ -1,4 +1,4 @@
-import { scoringConfig, profiles, getSizeIndex } from './config';
+import { scoringConfig, primaryProfiles, secondaryProfiles, getSizeIndex } from './config';
 
 const calculateScore = (criteria, modelCriteria, config) => {
   let score = 10;
@@ -20,9 +20,40 @@ const calculateScore = (criteria, modelCriteria, config) => {
   return Math.max(score, 0);
 };
 
-export const recommendNetworkModel = (criteria) => {
+const combineSecondaryProfiles = (criteria, primaryProfileName, secondaryProfiles, config) => {
+  const validCombinations = [];
+  const secondaryCount = secondaryProfiles.length;
 
-  const results = profiles.flatMap(profile => {
+  // Generate all combinations of secondary profiles
+  for (let i = 1; i < (1 << secondaryCount); i++) {
+    let combinedCriteria = {};
+    let combinedScore = 0;
+    let names = [];
+
+    for (let j = 0; j < secondaryCount; j++) {
+      if (i & (1 << j)) {
+        const profile = secondaryProfiles[j];
+        if (profile.allowedPrimaryProfiles.includes(primaryProfileName)) {
+          combinedCriteria = { ...combinedCriteria, ...profile.criteria };
+          combinedScore += calculateScore(criteria, profile.criteria, config);
+          names.push(profile.name);
+        }
+      }
+    }
+
+    if (names.length > 0) {
+      validCombinations.push({
+        name: names.join(" and "),
+        score: combinedScore
+      });
+    }
+  }
+
+  return validCombinations;
+};
+
+export const recommendNetworkModel = (criteria) => {
+  const primaryResults = primaryProfiles.flatMap(profile => {
     const subModelResults = profile.subModels.map(subModel => {
       const combinedCriteria = { ...profile.criteria, ...subModel.criteria };
       const score = calculateScore(criteria, combinedCriteria, scoringConfig);
@@ -46,6 +77,15 @@ export const recommendNetworkModel = (criteria) => {
     return subModelResults;
   });
 
-  const sortedResults = results.sort((a, b) => b.score - a.score);
-  return sortedResults;
+  const combinedResults = primaryResults.flatMap(primary => {
+    const secondaryCombinations = combineSecondaryProfiles(criteria, primary.name.split(' - ')[0], secondaryProfiles, scoringConfig);
+    return secondaryCombinations.map(secondary => {
+      return {
+        name: `${primary.name} with ${secondary.name}`,
+        score: primary.score + secondary.score
+      };
+    });
+  });
+
+  return combinedResults.sort((a, b) => b.score - a.score);
 };
