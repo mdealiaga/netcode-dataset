@@ -24,32 +24,41 @@ const calculateScore = (criteria, modelCriteria, config, modelName) => {
 
 const combineSecondaryProfiles = (criteria, primaryProfileName, secondaryProfiles, config) => {
   const validCombinations = new Map();
-  const secondaryCount = secondaryProfiles.length;
 
-  // Generate all combinations of secondary profiles
-  for (let i = 1; i < (1 << secondaryCount); i++) {
-    let combinedCriteria = {};
-    let combinedScore = 100; // Start with the max score for secondary profiles
-    let names = [];
+  const generateCombinations = (currentCombination, index) => {
+    if (index === secondaryProfiles.length) {
+      if (currentCombination.length > 0) {
+        let combinedCriteria = {};
+        let combinedScore = 100; // Start with the max score for secondary profiles
+        let names = [];
 
-    for (let j = 0; j < secondaryCount; j++) {
-      if (i & (1 << j)) {
-        const profile = secondaryProfiles[j];
-        if (profile.allowedPrimaryProfiles.includes(primaryProfileName)) {
-          combinedCriteria = { ...combinedCriteria, ...profile.criteria };
-          combinedScore = Math.min(combinedScore, calculateScore(criteria, profile.criteria, config, profile.name));
-          names.push(profile.name);
+        currentCombination.forEach(profile => {
+          if (profile.allowedPrimaryProfiles.includes(primaryProfileName)) {
+            combinedCriteria = { ...combinedCriteria, ...profile.criteria };
+            combinedScore = Math.min(combinedScore, calculateScore(criteria, profile.criteria, config, profile.name));
+            names.push(profile.name);
+          }
+        });
+
+        if (names.length > 0) {
+          validCombinations.set(names.join(" and "), combinedScore);
         }
       }
+      return;
     }
 
-    if (names.length > 0) {
-      validCombinations.set(names.join(" and "), combinedScore);
-    }
-  }
+    // Include the current profile
+    generateCombinations([...currentCombination, secondaryProfiles[index]], index + 1);
+
+    // Exclude the current profile
+    generateCombinations(currentCombination, index + 1);
+  };
+
+  generateCombinations([], 0);
 
   return Array.from(validCombinations.entries()).map(([name, score]) => ({ name, score }));
 };
+
 
 export const recommendNetworkModel = (criteria) => {
   const primaryResults = primaryProfiles.flatMap(profile => {
