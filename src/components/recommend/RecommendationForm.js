@@ -52,6 +52,7 @@ const RecommendationForm = ({ onRecommend }) => {
     e.preventDefault();
     setAttemptedSubmit(true); // Mark that a submit attempt was made
     if (isFormValid && !isSubmitting) {
+      console.log('Model Input Parameters:', formState); // Log the model input parameters here
       setIsSubmitting(true); // Prevent multiple submissions
       onRecommend(formState);
       setIsSubmitting(false); // Reset after submission
