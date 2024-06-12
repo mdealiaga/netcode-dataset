@@ -1,7 +1,6 @@
 import { scoringConfig, primaryProfiles, secondaryProfiles } from './config';
 
 const calculateScore = (criteria, modelCriteria, config, modelName) => {
-
   let score = 100;
   const penalties = [];
 
@@ -9,40 +8,26 @@ const calculateScore = (criteria, modelCriteria, config, modelName) => {
     if (modelCriteria[key] !== undefined) {
       if (Array.isArray(modelCriteria[key])) {
         if (!modelCriteria[key].includes(criteria[key])) {
-          penalties.push(`${key}: ${config[key].mismatchPenalty}`);
+          penalties.push({ key, penalty: config[key].mismatchPenalty, reason: `${key}: ${config[key].mismatchPenalty}` });
           score -= config[key].mismatchPenalty;
         }
       } else if (modelCriteria[key] !== criteria[key]) {
-        penalties.push(`${key}: ${config[key].mismatchPenalty}`);
+        penalties.push({ key, penalty: config[key].mismatchPenalty, reason: `${key}: ${config[key].mismatchPenalty}` });
         score -= config[key].mismatchPenalty;
       }
     } else {
-      penalties.push(`${key}: ${config[key].mismatchPenalty}`);
+      penalties.push({ key, penalty: config[key].mismatchPenalty, reason: `${key}: ${config[key].mismatchPenalty}` });
       score -= config[key].mismatchPenalty;
     }
   });
-  console.log('scoring', modelName)
-  console.log('criteria', criteria)
-  console.log('model criteria', modelCriteria)
-  // console.log('config', config)
-  console.log('penalties', penalties)
-  console.log('score', score)
+
+  console.log('scoring', modelName);
+  console.log('criteria', criteria);
+  console.log('model criteria', modelCriteria);
+  console.log('penalties', penalties);
+  console.log('score', score);
   return { score: Math.max(score, 0), penalties };
 };
-
-// const combineCriteria = (primaryCriteria, secondaryCriteria) => {
-//   const combinedCriteria = { ...primaryCriteria };
-
-//   Object.keys(secondaryCriteria).forEach(key => {
-//     if (Array.isArray(secondaryCriteria[key])) {
-//       combinedCriteria[key] = [...new Set([...(primaryCriteria[key] || []), ...secondaryCriteria[key]])];
-//     } else {
-//       combinedCriteria[key] = secondaryCriteria[key];
-//     }
-//   });
-
-//   return combinedCriteria;
-// };
 
 const combineCriteria = (primaryCriteria, secondaryCriteria) => {
   const combinedCriteria = { ...primaryCriteria };
@@ -124,41 +109,24 @@ const recommendNetworkModel = (criteria) => {
   const combinedResults = new Map();
 
   primaryResults.forEach(primary => {
-    // if (criteria.devTeamSize === "Small" && !primary.recommendLibraryIfSmallTeam) {
-    //   const score = calculateScore(adjustedCriteria, primary.combinedCriteria, scoringConfig, primary.name).score;
-    //   if (!combinedResults.has(primary.name) || combinedResults.get(primary.name) < score) {
-    //     combinedResults.set(primary.name, score);
-    //   }
-    // } else {
-      const secondaryCombinations = generateSecondaryCombinations(primary);
-      secondaryCombinations.forEach(({ name: combinedName, combinedCriteria }) => {
-        const score = calculateScore(adjustedCriteria, combinedCriteria, scoringConfig, combinedName).score;
-        if (!combinedResults.has(combinedName) || combinedResults.get(combinedName) < score) {
-          combinedResults.set(combinedName, score);
-        }
-      });
-
-      // Also add the primary profile without any secondary profiles if it is better
-      const primaryScore = calculateScore(adjustedCriteria, primary.combinedCriteria, scoringConfig, primary.name).score;
-      if (!combinedResults.has(primary.name) || combinedResults.get(primary.name) < primaryScore) {
-        combinedResults.set(primary.name, primaryScore);
+    const secondaryCombinations = generateSecondaryCombinations(primary);
+    secondaryCombinations.forEach(({ name, combinedCriteria }) => {
+      const { score, penalties } = calculateScore(adjustedCriteria, combinedCriteria, scoringConfig, name);
+      if (!combinedResults.has(name) || combinedResults.get(name).score < score) {
+        combinedResults.set(name, { score, penalties });
       }
-      console.log('secondary combinations', secondaryCombinations)
-      // secondaryProfiles.forEach(secondary => {
-      //   if (secondary.allowedSubModels.includes(primary.name.split(' - ')[1])) {
-      //     const combinedCriteria = combineCriteria(primary.combinedCriteria, secondary.criteria);
-      //     const score = calculateScore(adjustedCriteria, combinedCriteria, scoringConfig, `${primary.name} with ${secondary.name}`).score;
-      //     const combinedName = `${primary.name} with ${secondary.name}`;
-      //     if (!combinedResults.has(combinedName) || combinedResults.get(combinedName) < score) {
-      //       combinedResults.set(combinedName, score);
-      //     }
-      //   }
-      // });
+    });
+
+    const { score, penalties } = calculateScore(adjustedCriteria, primary.combinedCriteria, scoringConfig, primary.name);
+    if (!combinedResults.has(primary.name) || combinedResults.get(primary.name).score < score) {
+      combinedResults.set(primary.name, { score, penalties });
+    }
   });
 
-  return Array.from(combinedResults.entries()).map(([name, score]) => ({
+  return Array.from(combinedResults.entries()).map(([name, result]) => ({
     name,
-    score: Math.min(score, 100)
+    score: Math.min(result.score, 100),
+    penalties: result.penalties
   })).sort((a, b) => b.score - a.score);
 };
 

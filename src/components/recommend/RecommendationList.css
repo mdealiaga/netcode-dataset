@@ -1,0 +1,76 @@
+.recommendation-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .recommendation-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    color: #e0e0e0; /* Ensure text color is readable */
+    background-color: #2e3440; /* Dark background for better contrast */
+  }
+  
+  .recommendation-item.green {
+    background-color: #28a745; /* Green for 80%+ */
+    border-color: #28a745;
+  }
+  
+  .recommendation-item.orange {
+    background-color: #ffc107; /* Orange for 60-80% */
+    border-color: #ffc107;
+  }
+  
+  .recommendation-item.red {
+    background-color: #dc3545; /* Red for below 60% */
+    border-color: #dc3545;
+  }
+  
+  .recommendation-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .recommendation-primary {
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  
+  .recommendation-submodel {
+    margin-left: 10px;
+    font-size: 1.1em;
+  }
+  
+  .recommendation-secondaries {
+    margin-left: 20px;
+    font-size: 1em;
+    color: #fff;
+  }
+  
+  .recommendation-score {
+    font-weight: bold;
+    margin-top: 5px;
+    color: #212735; /* Dark text for better readability */
+  }
+  
+  .toggle-penalties-button {
+    margin-top: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .toggle-penalties-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .penalties-list {
+    margin-top: 10px;
+    color: #f8f9fa; /* Light text for better readability */
+  }
+  
