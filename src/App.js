@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
 import DataTable from './components/DataTable';
 import Recommendations from './components/recommend/Recommendations';
+import Profiles from './components/profiles/Profiles'; // Import the new Profiles component
 import './App.css';
 
 function Header() {
@@ -33,8 +34,9 @@ function Header() {
         </a>
       </div>
       <nav>
-        {/* <Link to="/">Home</Link>
-        <Link to="/recommend">Recommendations</Link> */}
+        <Link to="/">Home</Link>
+        <Link to="/recommend">Recommendations</Link>
+        <Link to="/profiles">Profiles</Link> {/* Add link to Profiles */}
       </nav>
     </header>
   );
@@ -49,6 +51,7 @@ function App() {
           <Routes>
             <Route path="/" element={<DataTable />} />
             <Route path="/recommend" element={<Recommendations />} />
+            <Route path="/profiles" element={<Profiles />} /> {/* Add the new route */}
           </Routes>
         </div>
       </div>

@@ -43,19 +43,19 @@ export const secondaryProfiles = [
   { name: "Server Side Rewind", criteria: {
      combatOption: "InstantHit", playerInteractionLevel: "Combat"
   }, 
-  // allowedPrimaryProfiles: ["Client-Server"],
+  allowedPrimaryProfiles: ["Client-Server"],
   allowedSubModels: ["Full-Auth"] 
 },
   { name: "Interest Management", criteria: {
      lobbySize: ["Medium", "Large"] 
     }, 
-    // allowedPrimaryProfiles: ["Client-Server", "P2P"],
+    allowedPrimaryProfiles: ["Client-Server", "P2P"],
     allowedSubModels: ["Full-Auth", "Hybrid", "Relay"] 
   },
   { name: "Third Party Library", criteria: {
      devTeamSize: ["Small"] 
     },
-    //  allowedPrimaryProfiles: ["Client-Server", "P2P"],
+     allowedPrimaryProfiles: ["Client-Server", "P2P"],
      allowedSubModels: ["Full-Auth", "Deterministic Lockstep", "Rollback"] 
     }
 ];

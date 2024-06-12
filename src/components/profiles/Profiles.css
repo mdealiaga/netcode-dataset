@@ -1,0 +1,55 @@
+.profiles-container {
+    padding: 20px;
+    color: #e0e0e0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .profile-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .profile-card {
+    background-color: #2e3440;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 20px;
+    width: calc(100% - 40px); /* Full width with margin */
+    max-width: 400px; /* Limit the maximum width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    overflow: hidden; /* Hide overflow content */
+  }
+  
+  .submodel-card {
+    background-color: #3b4252;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 10px;
+    overflow: hidden; /* Hide overflow content */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Ensure padding and border are included in width */
+    margin-right: 10px; /* Add space on the right side */
+    white-space: normal; /* Allow text to wrap normally */
+  }
+  
+  .profile-card h3, .submodel-card h5 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  
+  .profile-card p, .submodel-card p {
+    margin: 5px 0;
+    word-wrap: break-word; /* Allow long words to break */
+    white-space: normal; /* Allow text to wrap normally */
+    overflow-wrap: break-word; /* Handle long words properly */
+  }
+  
+  .profiles-container h2 {
+    text-align: center;
+  }
+  
