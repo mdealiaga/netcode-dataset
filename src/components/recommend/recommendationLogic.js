@@ -58,6 +58,40 @@ const combineCriteria = (primaryCriteria, secondaryCriteria) => {
   return combinedCriteria;
 };
 
+const generateSecondaryCombinations = (primary) => {
+  const validCombinations = [];
+
+  const combineWithSecondaryProfiles = (currentCombination, index) => {
+    if (index === secondaryProfiles.length) {
+      if (currentCombination.length > 0) {
+        let combinedCriteria = { ...primary.combinedCriteria };
+        let combinedName = primary.name;
+
+        currentCombination.forEach(secondary => {
+          combinedCriteria = combineCriteria(combinedCriteria, secondary.criteria);
+          combinedName += ` with ${secondary.name}`;
+        });
+
+        validCombinations.push({ name: combinedName, combinedCriteria });
+      }
+      return;
+    }
+
+    // Recurse with the current secondary profile included
+    if (secondaryProfiles[index].allowedSubModels.includes(primary.name.split(' - ')[1])) {
+      combineWithSecondaryProfiles([...currentCombination, secondaryProfiles[index]], index + 1);
+    }
+
+    // Recurse without the current secondary profile
+    combineWithSecondaryProfiles(currentCombination, index + 1);
+  };
+
+  // Start recursion with an empty combination
+  combineWithSecondaryProfiles([], 0);
+
+  return validCombinations;
+};
+
 const recommendNetworkModel = (criteria) => {
   const adjustedCriteria = {
     ...criteria,
@@ -90,24 +124,36 @@ const recommendNetworkModel = (criteria) => {
   const combinedResults = new Map();
 
   primaryResults.forEach(primary => {
-    if (criteria.devTeamSize === "Small" && !primary.recommendLibraryIfSmallTeam) {
-      const score = calculateScore(adjustedCriteria, primary.combinedCriteria, scoringConfig, primary.name).score;
-      if (!combinedResults.has(primary.name) || combinedResults.get(primary.name) < score) {
-        combinedResults.set(primary.name, score);
-      }
-    } else {
-      secondaryProfiles.forEach(secondary => {
-        // if (secondary.allowedPrimaryProfiles.includes(primary.name.split(' - ')[0])) {
-        if (secondary.allowedSubModels.includes(primary.name.split(' - ')[1])) {
-          const combinedCriteria = combineCriteria(primary.combinedCriteria, secondary.criteria);
-          const score = calculateScore(adjustedCriteria, combinedCriteria, scoringConfig, `${primary.name} with ${secondary.name}`).score;
-          const combinedName = `${primary.name} with ${secondary.name}`;
-          if (!combinedResults.has(combinedName) || combinedResults.get(combinedName) < score) {
-            combinedResults.set(combinedName, score);
-          }
+    // if (criteria.devTeamSize === "Small" && !primary.recommendLibraryIfSmallTeam) {
+    //   const score = calculateScore(adjustedCriteria, primary.combinedCriteria, scoringConfig, primary.name).score;
+    //   if (!combinedResults.has(primary.name) || combinedResults.get(primary.name) < score) {
+    //     combinedResults.set(primary.name, score);
+    //   }
+    // } else {
+      const secondaryCombinations = generateSecondaryCombinations(primary);
+      secondaryCombinations.forEach(({ name: combinedName, combinedCriteria }) => {
+        const score = calculateScore(adjustedCriteria, combinedCriteria, scoringConfig, combinedName).score;
+        if (!combinedResults.has(combinedName) || combinedResults.get(combinedName) < score) {
+          combinedResults.set(combinedName, score);
         }
       });
-    }
+
+      // Also add the primary profile without any secondary profiles if it is better
+      const primaryScore = calculateScore(adjustedCriteria, primary.combinedCriteria, scoringConfig, primary.name).score;
+      if (!combinedResults.has(primary.name) || combinedResults.get(primary.name) < primaryScore) {
+        combinedResults.set(primary.name, primaryScore);
+      }
+      console.log('secondary combinations', secondaryCombinations)
+      // secondaryProfiles.forEach(secondary => {
+      //   if (secondary.allowedSubModels.includes(primary.name.split(' - ')[1])) {
+      //     const combinedCriteria = combineCriteria(primary.combinedCriteria, secondary.criteria);
+      //     const score = calculateScore(adjustedCriteria, combinedCriteria, scoringConfig, `${primary.name} with ${secondary.name}`).score;
+      //     const combinedName = `${primary.name} with ${secondary.name}`;
+      //     if (!combinedResults.has(combinedName) || combinedResults.get(combinedName) < score) {
+      //       combinedResults.set(combinedName, score);
+      //     }
+      //   }
+      // });
   });
 
   return Array.from(combinedResults.entries()).map(([name, score]) => ({

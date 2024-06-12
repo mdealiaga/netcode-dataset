@@ -13,12 +13,12 @@ export const primaryProfiles = [
     name: "Client-Server",
     subModels: [
       { name: "Relay", criteria: {
-          gameType: "Casual",recommendLibraryIfSmallTeam: false, playerInteractionLevel: "None", devTeamSize: ["Small", "Medium", "Large"]
+          gameType: "Casual",recommendLibraryIfSmallTeam: false, onlineEconomy: false, combatOption: "", playerInteractionLevel: "None", devTeamSize: ["Small", "Medium", "Large"]
         },  },
       { name: "Full-Auth", criteria: {
-         gameType: "Competitive", onlineEconomy: [true, false], recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"] 
+         gameType: "Competitive", onlineEconomy: [true, false],  playerInteractionLevel: [ "Collision", "Combat"], combatOption: [ "Basic", "InstantHit"], recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"] 
         } },
-      { name: "Hybrid", criteria: { gameType: "Competitive", onlineEconomy: [true, false], recommendLibraryIfSmallTeam: false, devTeamSize: ["Small", "Medium", "Large"]
+      { name: "Hybrid", criteria: { gameType: "Competitive", playerInteractionLevel: ["None", "Collision", "Combat"], combatOption: ["", "Basic"], onlineEconomy: [true, false], recommendLibraryIfSmallTeam: false, devTeamSize: ["Small", "Medium", "Large"]
       } }
     ],
     criteria: { lobbySize: ["Small", "Medium", "Large"], manyEntities: false }
@@ -27,14 +27,15 @@ export const primaryProfiles = [
     name: "P2P",
     subModels: [
       { name: "Deterministic Lockstep", criteria: {
-         manyEntities: true, lobbySize: ["Small"], gameType: "Competitive", recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"]
-        
+         manyEntities: true, lobbySize: ["Small"], gameType: "Competitive", recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"], 
+       playerInteractionLevel: ["None", "Collision", "Combat"],  combatOption: ["", "Basic", "InstantHit"]
         } },
       { name: "Rollback", criteria: {
-         combatOption: "Responsive", lobbySize: ["Small"], gameType: "Competitive", recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"], playerInteractionLevel: "Combat"
+         lobbySize: ["Small"], gameType: "Competitive", recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"], 
+         playerInteractionLevel: "Combat", combatOption: "Responsive"
         } }
     ],
-    criteria: { lobbySize: ["Small"] }
+    criteria: { lobbySize: ["Small"], onlineEconomy: false }
   }
 ];
 
@@ -55,6 +56,6 @@ export const secondaryProfiles = [
      devTeamSize: ["Small"] 
     },
     //  allowedPrimaryProfiles: ["Client-Server", "P2P"],
-     allowedSubModels: ["Full-Auth", "Hybrid", "Relay", "Deterministic Lockstep", "Rollback"] 
+     allowedSubModels: ["Full-Auth", "Deterministic Lockstep", "Rollback"] 
     }
 ];
