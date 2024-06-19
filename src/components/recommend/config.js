@@ -2,7 +2,7 @@ export const scoringConfig = {
   lobbySize: { mismatchPenalty: 20 },
   gameType: { mismatchPenalty: 20 },
   onlineEconomy: { mismatchPenalty: 20 },
-  devTeamSize: { mismatchPenalty: 10 },
+  devTeamSize: { mismatchPenalty: 20 },
   manyEntities: { mismatchPenalty: 20 },
   combatOption: { mismatchPenalty: 20 },
   playerInteractionLevel: { mismatchPenalty: 20 }
@@ -32,7 +32,7 @@ export const primaryProfiles = [
         } },
       { name: "Rollback", criteria: {
          lobbySize: ["Small"], gameType: "Competitive", recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"], 
-         playerInteractionLevel: "Combat", combatOption: "Responsive"
+         playerInteractionLevel: "Combat", combatOption: "Responsive", manyEntities: false
         } }
     ],
     criteria: { lobbySize: ["Small"], onlineEconomy: false }

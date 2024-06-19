@@ -27,7 +27,7 @@ export const modelData = {
     type: "buttons",
     options: [
       { value: "Small", label: "Small (1-3)" },
-      { value: "Medium", label: "Medium (4-10)" },
+      { value: "Medium", label: "Medium (4-9)" },
       { value: "Large", label: "Large (10+)" }
     ]
   },

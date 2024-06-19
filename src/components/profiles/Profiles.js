@@ -2,6 +2,41 @@ import React from 'react';
 import { primaryProfiles, secondaryProfiles } from '../recommend/config';
 import './Profiles.css';
 
+const criteriaLabels = {
+  lobbySize: "Lobby Size",
+  gameType: "Game Type",
+  onlineEconomy: "Online Economy",
+  devTeamSize: "Development Team Size",
+  manyEntities: "Many Entities",
+  combatOption: "Combat Option",
+  playerInteractionLevel: "Player Interaction Level",
+  recommendLibraryIfSmallTeam: "Recommend Library If Small Team"
+};
+
+const booleanToYesNo = (value) => (value ? 'Yes' : 'No');
+
+const arrayToString = (array) => array.join(', ');
+
+const renderCriteria = (criteria) => {
+  return Object.keys(criteria).map(key => {
+    const value = criteria[key];
+    const label = criteriaLabels[key] || key;
+    let displayValue;
+
+    if (Array.isArray(value)) {
+      displayValue = arrayToString(value);
+    } else if (typeof value === 'boolean') {
+      displayValue = booleanToYesNo(value);
+    } else {
+      displayValue = value;
+    }
+
+    return (
+      <p key={key}><strong>{label}:</strong> {displayValue}</p>
+    );
+  });
+};
+
 const Profiles = () => {
   return (
     <div className="profiles-container">
@@ -10,13 +45,13 @@ const Profiles = () => {
         {primaryProfiles.map((profile, index) => (
           <div key={index} className="profile-card">
             <h3>{profile.name}</h3>
-            <p><strong>Criteria:</strong> {JSON.stringify(profile.criteria)}</p>
+            {renderCriteria(profile.criteria)}
             <h4>SubModels:</h4>
             {profile.subModels.map((subModel, subIndex) => (
               <div key={subIndex} className="submodel-card">
                 <h5>{subModel.name}</h5>
-                <p><strong>Criteria:</strong> {JSON.stringify(subModel.criteria)}</p>
-                <p><strong>Recommend Library If Small Team:</strong> {subModel.recommendLibraryIfSmallTeam ? 'Yes' : 'No'}</p>
+                {renderCriteria(subModel.criteria)}
+                <p><strong>Recommend Library If Small Team:</strong> {booleanToYesNo(subModel.recommendLibraryIfSmallTeam)}</p>
               </div>
             ))}
           </div>
@@ -27,9 +62,9 @@ const Profiles = () => {
         {secondaryProfiles.map((profile, index) => (
           <div key={index} className="profile-card">
             <h3>{profile.name}</h3>
-            <p><strong>Criteria:</strong> {JSON.stringify(profile.criteria)}</p>
-            <p><strong>Allowed Primary Profiles:</strong> {profile.allowedPrimaryProfiles.join(', ')}</p>
-            <p><strong>Allowed SubModels:</strong> {profile.allowedSubModels.join(', ')}</p>
+            {renderCriteria(profile.criteria)}
+            <p><strong>Allowed Primary Profiles:</strong> {arrayToString(profile.allowedPrimaryProfiles)}</p>
+            <p><strong>Allowed SubModels:</strong> {arrayToString(profile.allowedSubModels)}</p>
           </div>
         ))}
       </div>
