@@ -15,7 +15,7 @@ const criteriaLabels = {
 
 const booleanToYesNo = (value) => (value ? 'Yes' : 'No');
 
-const arrayToString = (array) => array.join(', ');
+const arrayToString = (array) => (Array.isArray(array) ? array.join(', ') : '');
 
 const renderCriteria = (criteria) => {
   return Object.keys(criteria).map(key => {
@@ -47,13 +47,13 @@ const Profiles = () => {
             <h3>{profile.name}</h3>
             {renderCriteria(profile.criteria)}
             <h4>SubModels:</h4>
-            {profile.subModels.map((subModel, subIndex) => (
+            {profile.subModels && profile.subModels.length > 0 ? profile.subModels.map((subModel, subIndex) => (
               <div key={subIndex} className="submodel-card">
                 <h5>{subModel.name}</h5>
                 {renderCriteria(subModel.criteria)}
                 <p><strong>Recommend Library If Small Team:</strong> {booleanToYesNo(subModel.recommendLibraryIfSmallTeam)}</p>
               </div>
-            ))}
+            )) : <p>No SubModels</p>}
           </div>
         ))}
       </div>

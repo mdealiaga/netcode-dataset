@@ -42,17 +42,10 @@ export const modelData = {
     options: [
       { value: "None", label: "No Interaction Between Players (e.g., racing game without collision)" },
       { value: "Collision", label: "Collision Between Players (e.g., Fall Guys)" },
-      { value: "Combat", label: "Players Can Hurt Each Other (e.g., Fortnite)" }
-    ]
-  },
-  combatOption: {
-    label: "Combat Option",
-    type: "radio",
-    options: [
-      { value: "Basic", label: "Basic Combat" },
-      { value: "InstantHit", label: "Instant Hit Detection" },
-      { value: "Responsive", label: "Responsive Combat" }
+      { value: "CombatNormal", label: "Basic Combat" },
+      { value: "CombatInstant", label: "Instant Hit Detection (e.g., Counter Strike)" },
+      { value: "CombatResponsive", label: "Responsive Combat (e.g., Tekken)" }
     ],
     info: "Basic Combat: Instant registration is not required (travel time, casting time, etc). Most games other than Competitive FPS and Fighting games.<br />Instant Hit Detection: This option is for games where a player needs to hit another player instantly (e.g., FPS games). These require server-side rewind algorithms to reconcile latency.<br />Responsive Combat: This option is for games that need extremely responsive combat (e.g., fighting games). These prioritize player input and use rollback algorithms."
-  }
+  },
 };

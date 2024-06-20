@@ -21,11 +21,6 @@ const calculateScore = (criteria, modelCriteria, config, modelName) => {
     }
   });
 
-  console.log('scoring', modelName);
-  console.log('criteria', criteria);
-  console.log('model criteria', modelCriteria);
-  console.log('penalties', penalties);
-  console.log('score', score);
   return { score: Math.max(score, 0), penalties };
 };
 
@@ -45,39 +40,38 @@ const combineCriteria = (primaryCriteria, secondaryCriteria) => {
 
 const generateSecondaryCombinations = (primary) => {
   const validCombinations = [];
+  const secondaryNames = [];
 
-  const combineWithSecondaryProfiles = (currentCombination, index) => {
-    if (index === secondaryProfiles.length) {
-      if (currentCombination.length > 0) {
-        let combinedCriteria = { ...primary.combinedCriteria };
-        let combinedName = primary.name;
+  secondaryProfiles.forEach(secondary => {
+    const [primaryProfile, subModel] = primary.name.includes(' - ') 
+      ? primary.name.split(' - ') 
+      : [primary.name, ''];
 
-        currentCombination.forEach(secondary => {
-          combinedCriteria = combineCriteria(combinedCriteria, secondary.criteria);
-          combinedName += ` with ${secondary.name}`;
-        });
+    console.log('Checking combination:', { primaryProfile, subModel, secondary });
 
-        validCombinations.push({ name: combinedName, combinedCriteria });
-      }
-      return;
+    if (
+      secondary.allowedPrimaryProfiles && secondary.allowedPrimaryProfiles.includes(primaryProfile) &&
+      (!subModel || secondary.allowedSubModels.includes(subModel))
+    ) {
+      const combinedCriteria = combineCriteria(primary.combinedCriteria, secondary.criteria);
+      secondaryNames.push(secondary.name);
+      validCombinations.push({ name: `${primary.name} with ${secondary.name}`, combinedCriteria });
     }
+  });
 
-    // Recurse with the current secondary profile included
-    if (secondaryProfiles[index].allowedSubModels.includes(primary.name.split(' - ')[1])) {
-      combineWithSecondaryProfiles([...currentCombination, secondaryProfiles[index]], index + 1);
-    }
+  // Add the primary model without any secondary profiles
+  validCombinations.push({ name: primary.name, combinedCriteria: primary.combinedCriteria });
 
-    // Recurse without the current secondary profile
-    combineWithSecondaryProfiles(currentCombination, index + 1);
-  };
-
-  // Start recursion with an empty combination
-  combineWithSecondaryProfiles([], 0);
+  // Create a single combined secondary profile string
+  if (secondaryNames.length > 0) {
+    const combinedSecondaryName = `${primary.name} with ${secondaryNames.join(' and ')}`;
+    validCombinations.push({ name: combinedSecondaryName, combinedCriteria: primary.combinedCriteria });
+  }
 
   return validCombinations;
 };
 
-const recommendNetworkModel = (criteria) => {
+export const recommendNetworkModel = (criteria) => {
   const adjustedCriteria = {
     ...criteria,
     combatOption: criteria.playerInteractionLevel !== "Combat" ? '' : criteria.combatOption
@@ -86,7 +80,6 @@ const recommendNetworkModel = (criteria) => {
   const primaryResults = primaryProfiles.flatMap(profile => {
     const subModelResults = profile.subModels.map(subModel => {
       const combinedCriteria = combineCriteria(profile.criteria, subModel.criteria);
-      console.log(`combined criteria for ${profile.name} - ${subModel.name}`, combinedCriteria)
       return {
         name: `${profile.name} - ${subModel.name}`,
         combinedCriteria,
@@ -129,5 +122,3 @@ const recommendNetworkModel = (criteria) => {
     penalties: result.penalties
   })).sort((a, b) => b.score - a.score);
 };
-
-export { recommendNetworkModel };

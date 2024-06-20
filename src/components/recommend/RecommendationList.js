@@ -27,14 +27,20 @@ const RecommendationItem = ({ recommendation }) => {
     return 'red';
   };
 
-  const [primaryProfile, subModel] = recommendation.name.split(' - ');
-  const secondaryProfiles = recommendation.name.split(' with ').slice(1).join(', ');
+  const [primaryProfile, ...rest] = recommendation.name.split(' - ');
+  const subModel = rest.join(' - ');
+  let secondaryProfiles = '';
+
+  if (primaryProfile === 'P2P') {
+    secondaryProfiles = subModel.split(' with ').slice(1).join(', ');
+  } else {
+    secondaryProfiles = subModel.split(' with ').slice(1).join(', ');
+  }
 
   return (
     <li className={`recommendation-item ${getScoreColor(recommendation.score)}`}>
       <div className="recommendation-header">
-        <div className="recommendation-primary">{primaryProfile}</div>
-        <div className="recommendation-submodel">{subModel}</div>
+        <div className="recommendation-primary">{primaryProfile} - {subModel.split(' with ')[0]}</div>
         <div className="recommendation-secondaries">{secondaryProfiles}</div>
         <div className="recommendation-score">Score: {recommendation.score}</div>
         <button className="toggle-penalties-button" onClick={togglePenalties}>
@@ -43,7 +49,6 @@ const RecommendationItem = ({ recommendation }) => {
       </div>
       {showPenalties && (
         <div className="penalties-list">
-          {/* <strong>Penalties:</strong> */}
           <ul>
             {recommendation.penalties.map((penalty, i) => (
               <li key={i}>{penalty.reason}</li>
