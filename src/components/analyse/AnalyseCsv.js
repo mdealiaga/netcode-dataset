@@ -52,7 +52,6 @@ const AnalyseCsv = () => {
   
   const analyzeData = (data) => {
     const results = data.map((row) => {
-      console.log("GAME NAME", row['Game Name'])
       const criteria = {
         lobbySize: row['Lobby Size'].split(' ')[0],
         gameType: row['Game Type'],
@@ -66,11 +65,9 @@ const AnalyseCsv = () => {
   
       // Filter recommendations with score 80 or higher
       const highScoreRecommendations = recommendation.filter(rec => rec.score >= 80);
-      // const highScoreRecommendations = recommendation;
-      console.log(highScoreRecommendations)
+  
       // Combine network profile and algorithms
       const recommendedModels = highScoreRecommendations.map(rec => {
-        // return `${rec.name} (Score: ${rec.score})`;
         return `${rec.name} (Score: ${rec.score}) (Penalties: ${rec.penalties.map(p => p.key).join(', ')})`;
       }).join(', ');
   
@@ -126,14 +123,16 @@ const AnalyseCsv = () => {
   };
   
   
+  
 
   const createActualModel = (row) => {
     const networkProfile = mapNetworkModel(row['Network Model']);
     const networkAlgorithms = [];
-
+  
+    console.log('CREATING MODEL FOR', row['Game Name'])
     Object.keys(row).forEach(key => {
-      if (key.includes('Server Side Rewind') && row[key] === 'TRUE') {
-        networkAlgorithms.push('Server Side Rewind');
+      if (key.includes('Server-Side Rewind') && row[key] === 'TRUE') {
+        networkAlgorithms.push('Server-Side Rewind');
       }
       if (key.includes('Rollback') && row[key] && row[key] === 'TRUE') {
         networkAlgorithms.push('Rollback');
@@ -148,9 +147,11 @@ const AnalyseCsv = () => {
         networkAlgorithms.push('Third Party Library');
       }
     });
-
+    console.log('found network algorithms', networkAlgorithms)
+    // Ensure that all relevant network algorithms are included in the actual model
     return `${networkProfile}${networkAlgorithms.length ? ' with ' + networkAlgorithms.join(' and ') : ''}`;
   };
+  
 
   const mapNetworkModel = (networkModel) => {
     switch (networkModel) {

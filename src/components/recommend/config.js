@@ -63,7 +63,7 @@ export const networkProfiles = [
 
 export const networkAlgorithms = [
   {
-    name: "Server Side Rewind",
+    name: "Server-Side Rewind",
     criteria: {
       playerInteractionLevel: "CombatInstant"
     },
