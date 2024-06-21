@@ -8,7 +8,8 @@ import CustomCell from '../dataset/CustomCell';
 import { CsvDataContext } from '../CsvDataContext';
 import { recommendNetworkModel } from '../recommend/recommendationLogic';
 import Summary from './Summary';
-import { jStat } from 'jstat';
+import jStat from 'jstat';
+import './AnalyseCsv.css'; // Import custom CSS file
 
 const AnalyseCsv = () => {
   const { csvData, loading, error } = useContext(CsvDataContext);
@@ -157,28 +158,31 @@ const AnalyseCsv = () => {
 
   return (
     <div>
-      <h2>Analyze CSV Data</h2>
+      {/* <h2>Analyze CSV Data</h2>
       <input type="file" accept=".csv" onChange={handleFileUpload} />
-      
+       */}
       {summary && (
         <Summary summary={summary} />
       )}
       
       {rowData.length > 0 && (
-        <div className="ag-theme-quartz-dark" style={{ height: '600px', width: '100%' }}>
-          <AgGridReact
-            rowData={rowData}
-            columnDefs={columnDefs}
-            defaultColDef={{ flex: 1, minWidth: 200, filter: true, sortable: true }}
-            pagination={true}
-            paginationPageSize={25}
-            domLayout='autoHeight'
-            headerHeight={100}
-            frameworkComponents={{
-              customHeader: CustomHeader,
-              customCell: CustomCell,
-            }}
-          />
+        <div className="evaluation-container">
+          <h3>Evaluation Data</h3>
+          <div className="ag-theme-quartz-dark" style={{ height: '600px', width: 'calc(100% - 40px)', margin: '0 auto', padding: '20px' }}>
+            <AgGridReact
+              rowData={rowData}
+              columnDefs={columnDefs}
+              defaultColDef={{ flex: 1, minWidth: 200, filter: true, sortable: true }}
+              pagination={true}
+              paginationPageSize={25}
+              domLayout='autoHeight'
+              headerHeight={100}
+              frameworkComponents={{
+                customHeader: CustomHeader,
+                customCell: CustomCell,
+              }}
+            />
+          </div>
         </div>
       )}
     </div>

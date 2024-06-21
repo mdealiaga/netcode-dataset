@@ -96,13 +96,19 @@ const Summary = ({ summary }) => {
 
   return (
     <div>
-      <h3>Summary</h3>
-      <p>Total Games: {summary.total}</p>
-      <p>Correct Predictions: {summary.correctPredictions}</p>
-      <p>Accuracy: {summary.accuracy}%</p>
-      <p>95% Confidence Interval: {summary.confidenceInterval[0]}% - {summary.confidenceInterval[1]}%</p>
+      <h3>Evaluation Results</h3>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '100px', flexWrap: 'wrap' }}>
+        <div style={{ width: '20%', textAlign: 'left' }}>
+          <p><strong>Total Games:</strong> {summary.total}</p>
+          <p><strong>Correct Predictions:</strong> {summary.correctPredictions}</p>
+        </div>
+        <div style={{ width: '20%', textAlign: 'left' }}>
+          <p><strong>Accuracy:</strong> {summary.accuracy}%</p>
+          <p><strong>95% Confidence Interval:</strong> {summary.confidenceInterval[0]}% - {summary.confidenceInterval[1]}%</p>
+        </div>
+      </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '100px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '100px', marginTop: '20px' }}>
         <div style={{ width: '20%' }}>
           <Bar data={confidenceIntervalData} options={confidenceIntervalOptions} />
         </div>
