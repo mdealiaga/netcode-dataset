@@ -1,3 +1,11 @@
+body {
+  background-color: #212735; /* Set the body background color to match the app theme */
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
 .App {
   text-align: center;
   background-color: #212735;
@@ -6,7 +14,7 @@
 
 .App-header {
   background-color: #212735;
-  padding: 35px 20px; /* Increase top and bottom padding */
+  padding: 20px 20px; /* Increase top and bottom padding */
   display: flex;
   justify-content: center;
   align-items: center;

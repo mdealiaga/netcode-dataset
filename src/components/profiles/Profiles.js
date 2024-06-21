@@ -56,7 +56,7 @@ const Profiles = () => {
             <h3>{algorithm.name}</h3>
             {renderCriteria(algorithm.criteria)}
             <p><strong>Allowed Network Profiles:</strong> {arrayToString(algorithm.allowedNetworkProfiles)}</p>
-            <p><strong>Allowed SubModels:</strong> {arrayToString(algorithm.allowedSubModels)}</p>
+            {/* <p><strong>Allowed SubModels:</strong> {arrayToString(algorithm.allowedSubModels)}</p> */}
           </div>
         ))}
       </div>
