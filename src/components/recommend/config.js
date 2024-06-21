@@ -16,6 +16,8 @@ export const prohibitedPairings = [
   ["Deterministic Lockstep", "Rollback"],
   ["Deterministic Lockstep", "Server Side Rewind"],
   ["Rollback", "Server Side Rewind"],
+  ["Rollback", "Interest Management"],
+  ["Deterministic Lockstep", "Interest Management"]
 ];
 
 
