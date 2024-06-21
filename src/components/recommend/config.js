@@ -8,9 +8,15 @@ export const scoringConfig = {
 };
 
 export const criteriaCombinationConfig = {
-  default: 'union', // Default behavior is to join the criteria (union)
-  // playerInteractionLevel: 'intersection' // Use intersection for playerInteractionLevel
+  default: 'union', 
+  // playerInteractionLevel: 'intersection'
 };
+
+export const prohibitedPairings = [
+  ["Deterministic Lockstep", "Rollback"],
+  ["Deterministic Lockstep", "Server Side Rewind"],
+  ["Rollback", "Server Side Rewind"],
+];
 
 
 export const networkProfiles = [

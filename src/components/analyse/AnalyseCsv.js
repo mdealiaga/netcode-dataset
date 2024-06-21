@@ -65,6 +65,7 @@ const AnalyseCsv = () => {
   
       // Filter recommendations with score 80 or higher
       const highScoreRecommendations = recommendation.filter(rec => rec.score >= 80);
+      // const highScoreRecommendations = recommendation
   
       // Combine network profile and algorithms
       const recommendedModels = highScoreRecommendations.map(rec => {

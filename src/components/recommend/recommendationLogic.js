@@ -1,4 +1,4 @@
-import { scoringConfig, networkProfiles, networkAlgorithms, criteriaCombinationConfig } from './config';
+import { scoringConfig, networkProfiles, networkAlgorithms, criteriaCombinationConfig, prohibitedPairings } from './config';
 
 const mapCombatValue = (combatValue) => {
   const mapping = {
@@ -77,6 +77,15 @@ const getCombinations = (array) => {
   return result;
 };
 
+const containsProhibitedPairing = (combination, prohibitedPairings) => {
+  for (const pair of prohibitedPairings) {
+    if (pair.every(item => combination.includes(item))) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const generateSecondaryCombinations = (primary) => {
   const validCombinations = [];
   const eligibleSecondaryAlgorithms = networkAlgorithms.filter(secondary =>
@@ -87,7 +96,7 @@ const generateSecondaryCombinations = (primary) => {
   const secondaryCombinations = getCombinations(eligibleSecondaryAlgorithms);
 
   secondaryCombinations.forEach(combination => {
-    if (combination.length > 0) {
+    if (combination.length > 0 && !containsProhibitedPairing(combination.map(sec => sec.name), prohibitedPairings)) {
       const combinedCriteria = combination.reduce((acc, secondary) => combineCriteria(acc, secondary.criteria), primary.combinedCriteria);
       const secondaryNames = combination.map(sec => sec.name);
       validCombinations.push({
