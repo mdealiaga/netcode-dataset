@@ -7,7 +7,8 @@ import CustomHeader from '../dataset/CustomHeader';
 import CustomCell from '../dataset/CustomCell';
 import { CsvDataContext } from '../CsvDataContext';
 import { recommendNetworkModel } from '../recommend/recommendationLogic';
-import jstat from 'jstat';
+import Summary from './Summary';
+import { jStat } from 'jstat';
 
 const AnalyseCsv = () => {
   const { csvData, loading, error } = useContext(CsvDataContext);
@@ -84,12 +85,13 @@ const AnalyseCsv = () => {
     // Calculate summary statistics
     const total = results.length;
     const correctPredictions = results.filter(result => result.matches).length;
+    const incorrectPredictions = total - correctPredictions;
     const accuracy = (correctPredictions / total) * 100;
 
     // Calculate confidence interval using jstat
     const confidenceLevel = 0.95;
     const standardError = Math.sqrt((accuracy / 100) * (1 - (accuracy / 100)) / total);
-    const zScore = jstat.normal.inv(1 - (1 - confidenceLevel) / 2, 0, 1);
+    const zScore = jStat.normal.inv(1 - (1 - confidenceLevel) / 2, 0, 1);
     const marginOfError = zScore * standardError * 100; // Convert to percentage
     const confidenceInterval = [
       Math.max(0, accuracy - marginOfError),
@@ -99,6 +101,7 @@ const AnalyseCsv = () => {
     setSummary({
       total,
       correctPredictions,
+      incorrectPredictions,
       accuracy: accuracy.toFixed(2),
       confidenceInterval: confidenceInterval.map(val => val.toFixed(2))
     });
@@ -158,13 +161,7 @@ const AnalyseCsv = () => {
       <input type="file" accept=".csv" onChange={handleFileUpload} />
       
       {summary && (
-        <div>
-          <h3>Summary</h3>
-          <p>Total Games: {summary.total}</p>
-          <p>Correct Predictions: {summary.correctPredictions}</p>
-          <p>Accuracy: {summary.accuracy}%</p>
-          <p>95% Confidence Interval: {summary.confidenceInterval[0]}% - {summary.confidenceInterval[1]}%</p>
-        </div>
+        <Summary summary={summary} />
       )}
       
       {rowData.length > 0 && (
