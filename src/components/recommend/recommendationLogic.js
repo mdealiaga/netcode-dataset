@@ -66,28 +66,46 @@ const combineCriteria = (primaryCriteria, secondaryCriteria) => {
   return combinedCriteria;
 };
 
+const getCombinations = (array) => {
+  const result = [[]];
+  for (const value of array) {
+    const copy = [...result];
+    for (const prefix of copy) {
+      result.push(prefix.concat(value));
+    }
+  }
+  return result;
+};
+
 const generateSecondaryCombinations = (primary) => {
   const validCombinations = [];
-  const secondaryNames = [];
+  const eligibleSecondaryAlgorithms = networkAlgorithms.filter(secondary =>
+    secondary.allowedNetworkProfiles.includes(primary.name)
+  );
 
-  networkAlgorithms.forEach(secondary => {
-    if (
-      secondary.allowedNetworkProfiles.includes(primary.name)
-    ) {
-      const combinedCriteria = combineCriteria(primary.combinedCriteria, secondary.criteria);
-      secondaryNames.push(secondary.name);
-      validCombinations.push({ name: `${primary.name} with ${secondary.name}`, combinedCriteria, networkProfile: primary.name, networkAlgorithms: [secondary.name] });
+  // Generate all combinations of secondary algorithms
+  const secondaryCombinations = getCombinations(eligibleSecondaryAlgorithms);
+
+  secondaryCombinations.forEach(combination => {
+    if (combination.length > 0) {
+      const combinedCriteria = combination.reduce((acc, secondary) => combineCriteria(acc, secondary.criteria), primary.combinedCriteria);
+      const secondaryNames = combination.map(sec => sec.name);
+      validCombinations.push({
+        name: `${primary.name} with ${secondaryNames.join(' and ')}`,
+        combinedCriteria,
+        networkProfile: primary.name,
+        networkAlgorithms: secondaryNames
+      });
     }
   });
 
   // Add the primary model without any secondary profiles
-  validCombinations.push({ name: primary.name, combinedCriteria: primary.combinedCriteria, networkProfile: primary.name, networkAlgorithms: [] });
-
-  // Create a single combined secondary profile string
-  if (secondaryNames.length > 0) {
-    const combinedSecondaryName = `${primary.name} with ${secondaryNames.join(' and ')}`;
-    validCombinations.push({ name: combinedSecondaryName, combinedCriteria: primary.combinedCriteria, networkProfile: primary.name, networkAlgorithms: secondaryNames });
-  }
+  validCombinations.push({
+    name: primary.name,
+    combinedCriteria: primary.combinedCriteria,
+    networkProfile: primary.name,
+    networkAlgorithms: []
+  });
 
   return validCombinations;
 };
@@ -96,35 +114,34 @@ export const recommendNetworkModel = (criteria) => {
   const adjustedCriteria = criteria;
 
   const primaryResults = networkProfiles.map(profile => {
-    const combinedCriteria = combineCriteria(profile.criteria, profile.criteria);
     return {
       name: profile.name,
-      combinedCriteria,
+      combinedCriteria: profile.criteria,
       recommendLibraryIfSmallTeam: profile.recommendLibraryIfSmallTeam,
       networkProfile: profile.name,
       networkAlgorithms: []
     };
   });
 
-  console.log('primary results', primaryResults)
   const combinedResults = new Map();
 
   primaryResults.forEach(primary => {
     const secondaryCombinations = generateSecondaryCombinations(primary);
+
     secondaryCombinations.forEach(({ name, combinedCriteria, networkProfile, networkAlgorithms }) => {
       const { score, penalties } = calculateScore(adjustedCriteria, combinedCriteria, scoringConfig, name);
       if (!combinedResults.has(name) || combinedResults.get(name).score < score) {
-        combinedResults.set(name, { score, penalties, networkProfile, networkAlgorithms, combinedCriteria });
+        combinedResults.set(name, { score, penalties, networkProfile, networkAlgorithms });
       }
     });
 
+    // Also consider the primary profile itself
     const { score, penalties } = calculateScore(adjustedCriteria, primary.combinedCriteria, scoringConfig, primary.name);
     if (!combinedResults.has(primary.name) || combinedResults.get(primary.name).score < score) {
       combinedResults.set(primary.name, { score, penalties, networkProfile: primary.name, networkAlgorithms: [] });
     }
   });
 
-  console.log('combined results', combinedResults)
   return Array.from(combinedResults.entries()).map(([name, result]) => ({
     name,
     score: Math.min(result.score, 100),

@@ -31,8 +31,9 @@ export const networkProfiles = [
     criteria: {
       lobbySize: ["Small", "Medium", "Large"],
       manyEntities: false,
-      gameType: "Casual",
-      playerInteractionLevel: "None",
+      gameType: ["Casual", "Cooperative"],
+      onlineEconomy: false,
+      playerInteractionLevel: ["None", "CombatNormal"],
       recommendLibraryIfSmallTeam: false,
       devTeamSize: ["Small","Medium", "Large"]
 
@@ -44,6 +45,7 @@ export const networkProfiles = [
       lobbySize: ["Small", "Medium", "Large"],
       manyEntities: false,
       gameType: "Competitive",
+      onlineEconomy: [true, false],
       playerInteractionLevel: ["None", "Collision", "CombatNormal"],
       recommendLibraryIfSmallTeam: false,
       devTeamSize: ["Small","Medium", "Large"]
@@ -53,7 +55,11 @@ export const networkProfiles = [
     name: "Peer to Peer",
     criteria: {
       lobbySize: ["Small"],
+      manyEntities: false,
+      gameType: ["Casual", "Cooperative"],
       onlineEconomy: false,
+      playerInteractionLevel: ["None", "Collision", "CombatNormal"],
+      recommendLibraryIfSmallTeam: false,
       devTeamSize: ["Medium", "Large"]
     }, 
     recommendLibraryIfSmallTeam: true,
