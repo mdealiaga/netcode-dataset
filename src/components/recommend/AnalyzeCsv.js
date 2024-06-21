@@ -18,98 +18,88 @@ const AnalyzeCsv = () => {
     }
   };
 
-  const parseSize = (size) => {
-    if (size.includes('Small')) return 'Small';
-    if (size.includes('Medium')) return 'Medium';
-    if (size.includes('Large')) return 'Large';
-    return size;
-  };
-
-  const mapNetworkModel = (model) => {
-    switch (model) {
-      case 'Peer to Peer':
-        return 'P2P';
-      case 'Client-Server with Server-Side Authority':
-        return 'Client-Server - Full-Auth';
-      case 'Client-Server with Client-Side Authority (Relay)':
-        return 'Client-Server - Relay';
-      case 'Client-Server with Hybrid Authority':
-        return 'Client-Server - Hybrid';
-      default:
-        return 'Unknown Model';
-    }
-  };
-
-  const createActualModel = (row) => {
-    const primaryAndSubModel = mapNetworkModel(row['Network Model']);
-    const secondaryProfiles = [];
-    Object.keys(row).forEach(key => {
-        if (key.startsWith('Server-Side Rewind') && row[key] === 'TRUE') secondaryProfiles.push('Server Side Rewind');
-        if (key.startsWith('Rollback') && row[key] === 'TRUE') secondaryProfiles.push('Rollback');
-        if (key.startsWith('Deterministic Lockstep') && row[key] === 'TRUE') secondaryProfiles.push('Deterministic Lockstep');
-        if (key.startsWith('Interest Management') && row[key] === 'TRUE') secondaryProfiles.push('Interest Management');
-        if (key.startsWith('Third Party Library')) {
-          if (row[key] && !row[key].includes('(in-house)')) {
-            secondaryProfiles.push('Third Party Library');
-          }
-        }
-      });
-  
-
-    return `${primaryAndSubModel}${secondaryProfiles.length ? ' with ' + secondaryProfiles.join(' and ') : ''}`;
-  };
-
   const analyzeData = () => {
     if (fileContent) {
       const results = fileContent.map((row) => {
         const criteria = {
-          lobbySize: parseSize(row['Lobby Size']),
+          lobbySize: row['Lobby Size'].split(' ')[0],
           gameType: row['Game Type'],
           onlineEconomy: row['Online Economy'] === 'TRUE',
-          devTeamSize: parseSize(row['Development Team Size']),
+          devTeamSize: row['Development Team Size'].split(' ')[0],
           manyEntities: row['Many Entities per Player'] === 'TRUE',
           playerInteractionLevel: row['Player Interaction Level'],
         };
 
-        const recommendations = recommendNetworkModel(criteria);
+        const recommendation = recommendNetworkModel(criteria);
 
         // Filter recommendations with score 80 or higher
-        const highScoreRecommendations = recommendations.filter(rec => rec.score >= 80);
+        const highScoreRecommendations = recommendation.filter(rec => rec.score >= 80);
 
-        // Combine primary profiles, submodels, and secondary profiles
+        // Combine network profile and algorithms
         const recommendedModels = highScoreRecommendations.map(rec => {
           let model = rec.name;
-          const secondaryProfiles = [];
-
-          rec.penalties.forEach(penalty => {
-            if (penalty.key in secondaryProfiles) {
-              secondaryProfiles.push(penalty.key);
-            }
-          });
-
-          if (secondaryProfiles.length > 0) {
-            model += ' with ' + secondaryProfiles.join(' and ');
-          }
-
-          return model;
+          return { name: model, score: rec.score };
         });
 
+        // Determine actual model used by the game
         const actualModel = createActualModel(row);
-        const matches = recommendedModels.includes(actualModel);
 
-        // Add all high score models with scores
-        const highScoreModels = highScoreRecommendations.map(rec => `${rec.name} (${rec.score})`).join(', ');
+        // Check if the recommended models match the actual model used by the game
+        const matches = recommendedModels.some(model => model.name === actualModel);
 
-        return {
-          'Game Name': row['Game Name'],
-          'Genre': row['Genre'],
-          'Used Server Model': actualModel,
-          'Recommended Model Matches': matches ? 'Yes' : 'No',
-          'High Score Models': highScoreModels,
+        return { 
+          gameName: row['Game Name'],
+          genre: row['Genre'],
+          usedServerModel: actualModel,
+          recommendedModelMatches: matches ? 'Yes' : 'No',
+          recommendedModels
         };
       });
 
       setAnalysisResults(results);
+    }
+  };
+
+  const checkForKeyword = (row, keyword) => {
+    return Object.keys(row).some(key => row[key] && row[key].toLowerCase().includes(keyword.toLowerCase()));
+  };
+  
+const createActualModel = (row) => {
+  const networkProfile = mapNetworkModel(row['Network Model']);
+  const networkAlgorithms = [];
+
+  Object.keys(row).forEach(key => {
+    if (key.includes('Server Side Rewind') && row[key] === 'TRUE') {
+      networkAlgorithms.push('Server Side Rewind');
+    }
+    if (key.includes('Rollback') && row[key] && row[key] === 'TRUE') {
+      networkAlgorithms.push('Rollback');
+    }
+    if (key.includes('Deterministic Lockstep') && row[key] === 'TRUE') {
+      networkAlgorithms.push('Deterministic Lockstep');
+    }
+    if (key.includes('Interest Management') && row[key] === 'TRUE') {
+      networkAlgorithms.push('Interest Management');
+    }
+    if (key.includes('Third Party Library') && row[key] && row[key].includes('Third Party Library') && !row[key].includes('(in-house)')) {
+      networkAlgorithms.push('Third Party Library');
+    }
+  });
+
+  return `${networkProfile}${networkAlgorithms.length ? ' with ' + networkAlgorithms.join(' and ') : ''}`;
+};
+  const mapNetworkModel = (networkModel) => {
+    switch (networkModel) {
+      case "Peer to Peer":
+        return "Peer to Peer";
+      case "Client-Server with Server-Side Authority":
+        return "Client-Server with Server-Side Authority";
+      case "Client-Server with Client-Side Authority (Relay)":
+        return "Client-Server with Client-Side Authority (Relay)";
+      case "Client-Server with Hybrid Authority":
+        return "Client-Server with Hybrid Authority";
+      default:
+        return "Unknown";
     }
   };
 
@@ -126,17 +116,21 @@ const AnalyzeCsv = () => {
               <th>Genre</th>
               <th>Used Server Model</th>
               <th>Recommended Model Matches</th>
-              <th>High Score Models</th>
+              <th>Recommended Models and Scores</th>
             </tr>
           </thead>
           <tbody>
             {analysisResults.map((result, index) => (
               <tr key={index}>
-                <td>{result['Game Name']}</td>
-                <td>{result['Genre']}</td>
-                <td>{result['Used Server Model']}</td>
-                <td>{result['Recommended Model Matches']}</td>
-                <td>{result['High Score Models']}</td>
+                <td>{result.gameName}</td>
+                <td>{result.genre}</td>
+                <td>{result.usedServerModel}</td>
+                <td>{result.recommendedModelMatches}</td>
+                <td>
+                  {result.recommendedModels.map((model, i) => (
+                    <div key={i}>{model.name} (Score: {model.score})</div>
+                  ))}
+                </td>
               </tr>
             ))}
           </tbody>

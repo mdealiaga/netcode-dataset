@@ -7,72 +7,93 @@ export const scoringConfig = {
   playerInteractionLevel: { mismatchPenalty: 20 }
 };
 
-export const primaryProfiles = [
+export const networkProfiles = [
   {
-    name: "Client-Server",
-    subModels: [
-      {
-        name: "Relay", criteria: {
-          gameType: "Casual", recommendLibraryIfSmallTeam: false, onlineEconomy: false, playerInteractionLevel: "None", devTeamSize: ["Small", "Medium", "Large"]
-        },
-      },
-      {
-        name: "Full-Auth", criteria: {
-          gameType: "Competitive", onlineEconomy: [true, false], playerInteractionLevel: ["Collision", "CombatNormal", "CombatInstant"], recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"]
-        }
-      },
-      {
-        name: "Hybrid", criteria: {
-          gameType: "Competitive", playerInteractionLevel: ["None", "Collision", "CombatNormal"], onlineEconomy: [true, false], recommendLibraryIfSmallTeam: false, devTeamSize: ["Small", "Medium", "Large"]
-        }
-      }
-    ],
-    criteria: { lobbySize: ["Small", "Medium", "Large"], manyEntities: false }
+    name: "Client-Server with Server-Side Authority",
+    criteria: {
+      lobbySize: ["Small", "Medium", "Large"],
+      manyEntities: false,
+      gameType: "Competitive",
+      playerInteractionLevel: ["Collision", "CombatNormal", "CombatInstant"],
+      recommendLibraryIfSmallTeam: true
+    }
   },
   {
-    name: "P2P",
-    subModels: [
-    ],
-    criteria: { lobbySize: ["Small"], onlineEconomy: false }
+    name: "Client-Server with Client-Side Authority (Relay)",
+    criteria: {
+      lobbySize: ["Small", "Medium", "Large"],
+      manyEntities: false,
+      gameType: "Casual",
+      playerInteractionLevel: "None",
+      recommendLibraryIfSmallTeam: false
+    }
+  },
+  {
+    name: "Client-Server with Hybrid Authority",
+    criteria: {
+      lobbySize: ["Small", "Medium", "Large"],
+      manyEntities: false,
+      gameType: "Competitive",
+      playerInteractionLevel: ["None", "Collision", "CombatNormal"],
+      recommendLibraryIfSmallTeam: false
+    }
+  },
+  {
+    name: "Peer to Peer",
+    criteria: {
+      lobbySize: ["Small"],
+      onlineEconomy: false
+    }, 
+    recommendLibraryIfSmallTeam: true,
+
   }
 ];
 
-export const secondaryProfiles = [
+export const networkAlgorithms = [
   {
-    name: "Server Side Rewind", criteria: {
+    name: "Server Side Rewind",
+    criteria: {
       playerInteractionLevel: "CombatInstant"
     },
-    allowedPrimaryProfiles: ["Client-Server"],
-    allowedSubModels: ["Full-Auth"]
+    allowedNetworkProfiles: ["Client-Server with Server-Side Authority"]
   },
   {
-    name: "Rollback", criteria: {
-      lobbySize: ["Small"], gameType: "Competitive", recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"],
-      playerInteractionLevel: "CombatResponsive", manyEntities: false
+    name: "Rollback",
+    criteria: {
+      lobbySize: ["Small"],
+      gameType: "Competitive",
+      recommendLibraryIfSmallTeam: true,
+      devTeamSize: ["Medium", "Large"],
+      playerInteractionLevel: "CombatResponsive",
+      manyEntities: false
     },
-    allowedPrimaryProfiles: ["Client-Server", "P2P"],
-    allowedSubModels: ["Relay"]
+    allowedNetworkProfiles: ["Peer to Peer", "Client-Server with Client-Side Authority (Relay)"]
   },
   {
-    name: "Deterministic Lockstep", criteria: {
-      manyEntities: true, lobbySize: ["Small"], gameType: "Competitive", recommendLibraryIfSmallTeam: true, devTeamSize: ["Medium", "Large"],
-      playerInteractionLevel: ["None", "Collision", "CombatNormal", "CombatInstant"],
+    name: "Deterministic Lockstep",
+    criteria: {
+      manyEntities: true,
+      lobbySize: ["Small"],
+      gameType: "Competitive",
+      recommendLibraryIfSmallTeam: true,
+      devTeamSize: ["Medium", "Large"],
+      playerInteractionLevel: ["None", "Collision", "CombatNormal", "CombatInstant"]
     },
-    allowedPrimaryProfiles: ["Client-Server", "P2P"],
-    allowedSubModels: ["Relay"]
+    allowedNetworkProfiles: ["Peer to Peer", "Client-Server with Client-Side Authority (Relay)"]
   },
   {
-    name: "Interest Management", criteria: {
+    name: "Interest Management",
+    criteria: {
       lobbySize: ["Medium", "Large"]
     },
-    allowedPrimaryProfiles: ["Client-Server", "P2P"],
-    allowedSubModels: ["Full-Auth", "Hybrid", "Relay"]
+    allowedNetworkProfiles: ["Client-Server with Server-Side Authority", "Client-Server with Client-Side Authority (Relay)", "Client-Server with Hybrid Authority", "Peer to Peer"]
   },
   {
-    name: "Third Party Library", criteria: {
+    name: "Third Party Library",
+    criteria: {
       devTeamSize: ["Small"]
     },
-    allowedPrimaryProfiles: ["Client-Server", "P2P"],
-    allowedSubModels: ["Full-Auth", "Deterministic Lockstep", "Rollback"]
+    allowedNetworkProfiles: ["Client-Server with Server-Side Authority", "Peer to Peer"],
+    other: true // Flag to identify this as "Other" in the profile view
   }
 ];

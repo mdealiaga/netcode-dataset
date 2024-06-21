@@ -1,5 +1,5 @@
 import React from 'react';
-import { primaryProfiles, secondaryProfiles } from '../recommend/config';
+import { networkProfiles, networkAlgorithms } from '../recommend/config';
 import './Profiles.css';
 
 const criteriaLabels = {
@@ -15,7 +15,7 @@ const criteriaLabels = {
 
 const booleanToYesNo = (value) => (value ? 'Yes' : 'No');
 
-const arrayToString = (array) => (Array.isArray(array) ? array.join(', ') : '');
+const arrayToString = (array) => Array.isArray(array) ? array.join(', ') : array;
 
 const renderCriteria = (criteria) => {
   return Object.keys(criteria).map(key => {
@@ -42,29 +42,21 @@ const Profiles = () => {
     <div className="profiles-container">
       <h2>Network Profiles</h2>
       <div className="profile-list">
-        {primaryProfiles.map((profile, index) => (
+        {networkProfiles.map((profile, index) => (
           <div key={index} className="profile-card">
             <h3>{profile.name}</h3>
             {renderCriteria(profile.criteria)}
-            <h4>SubModels:</h4>
-            {profile.subModels && profile.subModels.length > 0 ? profile.subModels.map((subModel, subIndex) => (
-              <div key={subIndex} className="submodel-card">
-                <h5>{subModel.name}</h5>
-                {renderCriteria(subModel.criteria)}
-                <p><strong>Recommend Library If Small Team:</strong> {booleanToYesNo(subModel.recommendLibraryIfSmallTeam)}</p>
-              </div>
-            )) : <p>No SubModels</p>}
           </div>
         ))}
       </div>
-      <h2>Secondary Profiles</h2>
+      <h2>Network Algorithms</h2>
       <div className="profile-list">
-        {secondaryProfiles.map((profile, index) => (
+        {networkAlgorithms.map((algorithm, index) => (
           <div key={index} className="profile-card">
-            <h3>{profile.name}</h3>
-            {renderCriteria(profile.criteria)}
-            <p><strong>Allowed Primary Profiles:</strong> {arrayToString(profile.allowedPrimaryProfiles)}</p>
-            <p><strong>Allowed SubModels:</strong> {arrayToString(profile.allowedSubModels)}</p>
+            <h3>{algorithm.name}</h3>
+            {renderCriteria(algorithm.criteria)}
+            <p><strong>Allowed Network Profiles:</strong> {arrayToString(algorithm.allowedNetworkProfiles)}</p>
+            <p><strong>Allowed SubModels:</strong> {arrayToString(algorithm.allowedSubModels)}</p>
           </div>
         ))}
       </div>

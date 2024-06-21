@@ -27,21 +27,13 @@ const RecommendationItem = ({ recommendation }) => {
     return 'red';
   };
 
-  const [primaryProfile, ...rest] = recommendation.name.split(' - ');
-  const subModel = rest.join(' - ');
-  let secondaryProfiles = '';
-
-  if (primaryProfile === 'P2P') {
-    secondaryProfiles = subModel.split(' with ').slice(1).join(', ');
-  } else {
-    secondaryProfiles = subModel.split(' with ').slice(1).join(', ');
-  }
-
   return (
     <li className={`recommendation-item ${getScoreColor(recommendation.score)}`}>
       <div className="recommendation-header">
-        <div className="recommendation-primary">{primaryProfile} - {subModel.split(' with ')[0]}</div>
-        <div className="recommendation-secondaries">{secondaryProfiles}</div>
+        <div className="recommendation-primary">{recommendation.networkProfile}</div>
+        {recommendation.networkAlgorithms.length > 0 && (
+          <div className="recommendation-secondary">{recommendation.networkAlgorithms.join(' and ')}</div>
+        )}
         <div className="recommendation-score">Score: {recommendation.score}</div>
         <button className="toggle-penalties-button" onClick={togglePenalties}>
           {showPenalties ? 'Hide Penalties' : 'Show Penalties'}
