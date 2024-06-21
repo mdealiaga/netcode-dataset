@@ -12,3 +12,37 @@
     margin-bottom: 20px;
   }
   
+  .confidence-level-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .confidence-level-container label {
+    margin-right: 10px;
+    font-size: 1.1em;
+  }
+  
+  .confidence-level-container select,
+  .confidence-level-container input[type="range"] {
+    padding: 5px 10px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #212735;
+    color: #e0e0e0;
+  }
+  
+  .summary-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .summary-grid > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  

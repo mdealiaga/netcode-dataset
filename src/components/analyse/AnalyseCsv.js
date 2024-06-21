@@ -9,7 +9,7 @@ import { CsvDataContext } from '../CsvDataContext';
 import { recommendNetworkModel } from '../recommend/recommendationLogic';
 import Summary from './Summary';
 import jStat from 'jstat';
-import './AnalyseCsv.css'; // Import custom CSS file
+import './AnalyseCsv.css';
 
 const AnalyseCsv = () => {
   const { csvData, loading, error } = useContext(CsvDataContext);
@@ -17,12 +17,13 @@ const AnalyseCsv = () => {
   const [columnDefs, setColumnDefs] = useState([]);
   const [customData, setCustomData] = useState(null);
   const [summary, setSummary] = useState(null);
+  const [confidenceLevel, setConfidenceLevel] = useState(0.95); // Default confidence level to 95%
 
   useEffect(() => {
     if (csvData) {
       analyzeData(csvData);
     }
-  }, [csvData]);
+  }, [csvData, confidenceLevel]); // Recalculate when confidence level changes
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -90,7 +91,6 @@ const AnalyseCsv = () => {
     const accuracy = (correctPredictions / total) * 100;
 
     // Calculate confidence interval using jstat
-    const confidenceLevel = 0.95;
     const standardError = Math.sqrt((accuracy / 100) * (1 - (accuracy / 100)) / total);
     const zScore = jStat.normal.inv(1 - (1 - confidenceLevel) / 2, 0, 1);
     const marginOfError = zScore * standardError * 100; // Convert to percentage
@@ -148,6 +148,10 @@ const AnalyseCsv = () => {
     }
   };
 
+  const handleConfidenceLevelChange = (e) => {
+    setConfidenceLevel(parseFloat(e.target.value));
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -159,10 +163,22 @@ const AnalyseCsv = () => {
   return (
     <div>
       {/* <h2>Analyze CSV Data</h2>
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
-       */}
+      <input type="file" accept=".csv" onChange={handleFileUpload} /> */}
+      
       {summary && (
-        <Summary summary={summary} />
+        <>
+          <Summary summary={summary} />
+          <div className="confidence-level-container">
+            <label htmlFor="confidence-level">Confidence Level:</label>
+            <select id="confidence-level" value={confidenceLevel} onChange={handleConfidenceLevelChange}>
+              <option value="0.80">80%</option>
+              <option value="0.85">85%</option>
+              <option value="0.90">90%</option>
+              <option value="0.95">95%</option>
+              <option value="0.99">99%</option>
+            </select>
+          </div>
+        </>
       )}
       
       {rowData.length > 0 && (
