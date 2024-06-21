@@ -1,44 +1,52 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import DataTable from './components/DataTable';
 import Recommendations from './components/recommend/Recommendations';
 import Profiles from './components/profiles/Profiles';
 import AnalyseCsv from './components/analyse/AnalyseCsv';
 import './App.css';
-import { csvUrl, formUrl } from './constants';
+import { CsvDataProvider } from './components/CsvDataContext';
 
 function Header() {
   return (
     <header className="App-header">
       <div className="header-content">
         <h1 className="header-title">Game Netcode Database</h1>
+        <nav>
+          <Link to="/">Home</Link>
+          <Link to="/recommend">Recommendations</Link>
+          <Link to="/profiles">Profiles</Link>
+          <Link to="/analyse">Evaluation</Link>
+          <a
+            href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSev34FK3e5MuHtQED5AUSovGEAU9l5TgxP4_w-RnEQRngIM6EDBRvzPS7WJnWKHjPrzMsl9BlCI1ly/pub?gid=133993680&single=true&output=csv"
+            download
+            className="header-link"
+          >
+            Download Dataset
+          </a>
+        </nav>
       </div>
-      <nav>
-        <NavLink exact to="/" activeClassName="active">Home</NavLink>
-        <NavLink to="/recommend" activeClassName="active">Recommendations</NavLink>
-        <NavLink to="/profiles" activeClassName="active">Profiles</NavLink>
-        <NavLink to="/analyse" activeClassName="active">Analyse CSV</NavLink>
-        <a href={csvUrl} download className="header-link download-link">Download Dataset</a>
-      </nav>
     </header>
   );
 }
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <div className="content">
-          <Routes>
-            <Route path="/" element={<DataTable />} />
-            <Route path="/recommend" element={<Recommendations />} />
-            <Route path="/profiles" element={<Profiles />} />
-            <Route path="/analyse" element={<AnalyseCsv />} />
-          </Routes>
+    <CsvDataProvider>
+      <Router>
+        <div className="App">
+          <Header />
+          <div className="content">
+            <Routes>
+              <Route path="/" element={<DataTable />} />
+              <Route path="/recommend" element={<Recommendations />} />
+              <Route path="/profiles" element={<Profiles />} />
+              <Route path="/analyse" element={<AnalyseCsv />} />
+            </Routes>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </CsvDataProvider>
   );
 }
 

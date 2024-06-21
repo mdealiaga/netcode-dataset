@@ -1,81 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import Papa from 'papaparse';
+import React, { useContext, useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import CustomHeader from './CustomHeader';
 import CustomCell from './CustomCell';
-import { csvUrl } from '../constants';
+import { CsvDataContext } from './CsvDataContext';
 
 const DataTable = () => {
+  const { csvData, loading, error } = useContext(CsvDataContext);
   const [rowData, setRowData] = useState([]);
   const [columnDefs, setColumnDefs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(csvUrl);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const reader = response.body.getReader();
-        const result = await reader.read();
-        const decoder = new TextDecoder('utf-8');
-        const csv = decoder.decode(result.value);
-        const results = Papa.parse(csv, { header: true });
+    if (csvData) {
+      const processedData = csvData.map(row => {
+        const newRow = { ...row };
+        delete newRow.Timestamp;
+        return newRow;
+      });
 
-        const processedData = results.data.map(row => {
-          const newRow = { ...row };
-          delete newRow.Timestamp;
-          return newRow;
-        });
+      const processedColumns = Object.keys(processedData[0]).map(key => {
+        const modifiedKey = key.replace(/\./g, '_');
+        const match = key.match(/^(.*?)\s*\((.*)\)?$/);
+        const mainText = match ? match[1] : key;
+        const comments = match && match[2] ? match[2] : '';
+        const isSourcesColumn = mainText.toLowerCase() === 'sources';
 
-        const processedColumns = Object.keys(processedData[0]).map(key => {
+        return {
+          headerName: mainText,
+          field: modifiedKey,
+          width: isSourcesColumn ? 600 : 200,
+          minWidth: isSourcesColumn ? 400 : 200,
+          cellRenderer: isSourcesColumn ? CustomCell : undefined,
+          cellClass: isSourcesColumn ? 'auto-height-cell' : '',
+          filter: 'agTextColumnFilter',
+          headerComponent: CustomHeader,
+          headerComponentParams: { displayName: mainText, comments: comments },
+          autoHeight: isSourcesColumn,
+          cellClassRules: {
+            'cell-true': params => params.value === 'TRUE',
+            'cell-false': params => params.value === 'FALSE'
+          },
+        };
+      });
+
+      const transformedData = processedData.map(row => {
+        const newRow = {};
+        Object.keys(row).forEach(key => {
           const modifiedKey = key.replace(/\./g, '_');
-          const match = key.match(/^(.*?)\s*\((.*)\)?$/);
-          const mainText = match ? match[1] : key;
-          const comments = match && match[2] ? match[2] : '';
-          const isSourcesColumn = mainText.toLowerCase() === 'sources';
-
-          return {
-            headerName: mainText,
-            field: modifiedKey,
-            width: isSourcesColumn ? 600 : 200,
-            minWidth: isSourcesColumn ? 400 : 200,
-            cellRenderer: isSourcesColumn ? CustomCell : undefined,
-            cellClass: isSourcesColumn ? 'auto-height-cell' : '',
-            filter: 'agTextColumnFilter',
-            headerComponent: CustomHeader,
-            headerComponentParams: { displayName: mainText, comments: comments },
-            autoHeight: isSourcesColumn,
-            cellClassRules: {
-              'cell-true': params => params.value === 'TRUE',
-              'cell-false': params => params.value === 'FALSE'
-            },
-          };
+          newRow[modifiedKey] = row[key];
         });
+        return newRow;
+      });
 
-        const transformedData = processedData.map(row => {
-          const newRow = {};
-          Object.keys(row).forEach(key => {
-            const modifiedKey = key.replace(/\./g, '_');
-            newRow[modifiedKey] = row[key];
-          });
-          return newRow;
-        });
-
-        setRowData(transformedData);
-        setColumnDefs(processedColumns);
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+      setRowData(transformedData);
+      setColumnDefs(processedColumns);
+    }
+  }, [csvData]);
 
   if (loading) {
     return <div>Loading...</div>;

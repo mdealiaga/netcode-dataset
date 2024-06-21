@@ -1,39 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import CustomHeader from '../CustomHeader';
 import CustomCell from '../CustomCell';
-import { csvUrl } from '../../constants';
+import { CsvDataContext } from '../CsvDataContext';
 import { recommendNetworkModel } from '../recommend/recommendationLogic';
 
 const AnalyseCsv = () => {
+  const { csvData, loading, error } = useContext(CsvDataContext);
   const [rowData, setRowData] = useState([]);
   const [columnDefs, setColumnDefs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [customData, setCustomData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(csvUrl);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const reader = response.body.getReader();
-        const result = await reader.read();
-        const decoder = new TextDecoder('utf-8');
-        const csv = decoder.decode(result.value);
-        const results = Papa.parse(csv, { header: true });
-        analyzeData(results.data);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+    if (csvData) {
+      analyzeData(csvData);
+    }
+  }, [csvData]);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -41,6 +26,7 @@ const AnalyseCsv = () => {
       Papa.parse(file, {
         header: true,
         complete: (result) => {
+          setCustomData(result.data);
           analyzeData(result.data);
         },
       });
@@ -84,20 +70,19 @@ const AnalyseCsv = () => {
     });
 
     setRowData(results);
-    setLoading(false);
     setColumnDefs([
       { headerName: 'Game Name', field: 'gameName', width: 200 },
-      { headerName: 'Genre', field: 'genre', width: 150 },
-      { headerName: 'Used Server Model', field: 'usedServerModel', width: 300 },
+      { headerName: 'Genre', field: 'genre', width: 200 },
+      { headerName: 'Used Server Model', field: 'usedServerModel', width: 200 },
       { headerName: 'Recommended Model Matches', field: 'recommendedModelMatches', width: 200 },
-      { headerName: 'Recommended Models and Scores', field: 'recommendedModels', width: 400 }
+      { headerName: 'Recommended Models and Scores', field: 'recommendedModels', width: 400 },
     ]);
   };
 
   const checkForKeyword = (row, keyword) => {
     return Object.keys(row).some(key => row[key] && row[key].toLowerCase().includes(keyword.toLowerCase()));
   };
-  
+
   const createActualModel = (row) => {
     const networkProfile = mapNetworkModel(row['Network Model']);
     const networkAlgorithms = [];
@@ -147,22 +132,25 @@ const AnalyseCsv = () => {
   }
 
   return (
-    <div className="ag-theme-quartz-dark" style={{ height: '600px', width: '100%' }}>
-      <h2>Analyze CSV Data</h2>
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
+    <div>
+      {/* <h2>Analyze CSV Data</h2>
+      <input type="file" accept=".csv" onChange={handleFileUpload} /> */}
       {rowData.length > 0 && (
-        <AgGridReact
-          rowData={rowData}
-          columnDefs={columnDefs}
-          defaultColDef={{ flex: 1, minWidth: 200, filter: true, sortable: true }}
-          pagination={true}
-          paginationPageSize={25}
-          domLayout='autoHeight'
-          frameworkComponents={{
-            customHeader: CustomHeader,
-            customCell: CustomCell
-          }}
-        />
+        <div className="ag-theme-quartz-dark" style={{ height: '600px', width: '100%' }}>
+          <AgGridReact
+            rowData={rowData}
+            columnDefs={columnDefs}
+            defaultColDef={{ flex: 1, minWidth: 200, filter: true, sortable: true }}
+            pagination={true}
+            paginationPageSize={25}
+            domLayout='autoHeight'
+            headerHeight={100}
+            frameworkComponents={{
+              customHeader: CustomHeader,
+              customCell: CustomCell,
+            }}
+          />
+        </div>
       )}
     </div>
   );
