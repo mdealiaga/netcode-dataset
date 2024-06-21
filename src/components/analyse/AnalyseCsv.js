@@ -43,7 +43,7 @@ const AnalyseCsv = () => {
       "No Interaction Between Players": "None",
       "Collision Between Players": "Collision",
       "Combat - Basic": "CombatNormal",
-      "Combat - Instant": "CombatInstant",
+      "Combat - Instant Hit Detection": "CombatInstant",
       "Combat - Responsive": "CombatResponsive"
     };
   
@@ -52,13 +52,14 @@ const AnalyseCsv = () => {
   
   const analyzeData = (data) => {
     const results = data.map((row) => {
+      console.log("GAME NAME", row['Game Name'])
       const criteria = {
         lobbySize: row['Lobby Size'].split(' ')[0],
         gameType: row['Game Type'],
         onlineEconomy: row['Online Economy'] === 'TRUE',
         devTeamSize: row['Development Team Size'].split(' ')[0],
         manyEntities: row['Many Entities per Player'] === 'TRUE',
-        playerInteractionLevel: mapCombatValue(row['Player Interaction Level']) // Use the mapping function here
+        playerInteractionLevel: mapCombatValue(row['Player Interaction Level']) 
       };
   
       const recommendation = recommendNetworkModel(criteria);

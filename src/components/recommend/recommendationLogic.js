@@ -1,4 +1,16 @@
-import { scoringConfig, networkProfiles, networkAlgorithms } from './config';
+import { scoringConfig, networkProfiles, networkAlgorithms, criteriaCombinationConfig } from './config';
+
+const mapCombatValue = (combatValue) => {
+  const mapping = {
+    "No Interaction Between Players": "None",
+    "Collision Between Players": "Collision",
+    "Basic Combat": "CombatNormal",
+    "Instant Hit Detection": "CombatInstant",
+    "Responsive Combat": "CombatResponsive"
+  };
+
+  return mapping[combatValue] || "None"; // Default to "None" if no match found
+};
 
 const calculateScore = (criteria, modelCriteria, config, modelName) => {
   let score = 100;
@@ -28,10 +40,26 @@ const combineCriteria = (primaryCriteria, secondaryCriteria) => {
   const combinedCriteria = { ...primaryCriteria };
 
   Object.keys(secondaryCriteria).forEach(key => {
-    if (Array.isArray(secondaryCriteria[key]) || Array.isArray(primaryCriteria[key])) {
-      combinedCriteria[key] = [...new Set([...(primaryCriteria[key] || []), ...(secondaryCriteria[key] || [])])];
-    } else {
-      combinedCriteria[key] = secondaryCriteria[key];
+    const combinationMethod = criteriaCombinationConfig[key] || criteriaCombinationConfig.default;
+
+    if (combinationMethod === 'intersection') {
+      if (Array.isArray(primaryCriteria[key]) && Array.isArray(secondaryCriteria[key])) {
+        combinedCriteria[key] = primaryCriteria[key].filter(value => secondaryCriteria[key].includes(value));
+      } else if (primaryCriteria[key] === secondaryCriteria[key]) {
+        combinedCriteria[key] = primaryCriteria[key];
+      } else {
+        combinedCriteria[key] = []; // No intersection
+      }
+    } else if (combinationMethod === 'union') {
+      if (Array.isArray(primaryCriteria[key]) && Array.isArray(secondaryCriteria[key])) {
+        combinedCriteria[key] = [...new Set([...(primaryCriteria[key] || []), ...(secondaryCriteria[key] || [])])];
+      } else if (Array.isArray(primaryCriteria[key])) {
+        combinedCriteria[key] = [...new Set([...(primaryCriteria[key] || []), secondaryCriteria[key]])];
+      } else if (Array.isArray(secondaryCriteria[key])) {
+        combinedCriteria[key] = [...new Set([primaryCriteria[key], ...(secondaryCriteria[key] || [])])];
+      } else {
+        combinedCriteria[key] = secondaryCriteria[key];
+      }
     }
   });
 
@@ -65,10 +93,7 @@ const generateSecondaryCombinations = (primary) => {
 };
 
 export const recommendNetworkModel = (criteria) => {
-  const adjustedCriteria = {
-    ...criteria,
-    combatOption: criteria.playerInteractionLevel !== "Combat" ? '' : criteria.combatOption
-  };
+  const adjustedCriteria = criteria;
 
   const primaryResults = networkProfiles.map(profile => {
     const combinedCriteria = combineCriteria(profile.criteria, profile.criteria);
@@ -81,6 +106,7 @@ export const recommendNetworkModel = (criteria) => {
     };
   });
 
+  console.log('primary results', primaryResults)
   const combinedResults = new Map();
 
   primaryResults.forEach(primary => {
@@ -88,7 +114,7 @@ export const recommendNetworkModel = (criteria) => {
     secondaryCombinations.forEach(({ name, combinedCriteria, networkProfile, networkAlgorithms }) => {
       const { score, penalties } = calculateScore(adjustedCriteria, combinedCriteria, scoringConfig, name);
       if (!combinedResults.has(name) || combinedResults.get(name).score < score) {
-        combinedResults.set(name, { score, penalties, networkProfile, networkAlgorithms });
+        combinedResults.set(name, { score, penalties, networkProfile, networkAlgorithms, combinedCriteria });
       }
     });
 
@@ -98,6 +124,7 @@ export const recommendNetworkModel = (criteria) => {
     }
   });
 
+  console.log('combined results', combinedResults)
   return Array.from(combinedResults.entries()).map(([name, result]) => ({
     name,
     score: Math.min(result.score, 100),

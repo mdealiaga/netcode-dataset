@@ -7,6 +7,12 @@ export const scoringConfig = {
   playerInteractionLevel: { mismatchPenalty: 40 }
 };
 
+export const criteriaCombinationConfig = {
+  default: 'union', // Default behavior is to join the criteria (union)
+  // playerInteractionLevel: 'intersection' // Use intersection for playerInteractionLevel
+};
+
+
 export const networkProfiles = [
   {
     name: "Client-Server with Server-Side Authority",
@@ -15,8 +21,9 @@ export const networkProfiles = [
       manyEntities: false,
       gameType: "Competitive",
       onlineEconomy: [true, false],
-      playerInteractionLevel: ["Collision", "CombatNormal", "CombatInstant"],
-      recommendLibraryIfSmallTeam: true
+      playerInteractionLevel: ["Collision", "CombatNormal"],
+      recommendLibraryIfSmallTeam: true,
+      devTeamSize: ["Medium", "Large"]
     }
   },
   {
@@ -26,7 +33,9 @@ export const networkProfiles = [
       manyEntities: false,
       gameType: "Casual",
       playerInteractionLevel: "None",
-      recommendLibraryIfSmallTeam: false
+      recommendLibraryIfSmallTeam: false,
+      devTeamSize: ["Small","Medium", "Large"]
+
     }
   },
   {
@@ -36,14 +45,16 @@ export const networkProfiles = [
       manyEntities: false,
       gameType: "Competitive",
       playerInteractionLevel: ["None", "Collision", "CombatNormal"],
-      recommendLibraryIfSmallTeam: false
+      recommendLibraryIfSmallTeam: false,
+      devTeamSize: ["Small","Medium", "Large"]
     }
   },
   {
     name: "Peer to Peer",
     criteria: {
       lobbySize: ["Small"],
-      onlineEconomy: false
+      onlineEconomy: false,
+      devTeamSize: ["Medium", "Large"]
     }, 
     recommendLibraryIfSmallTeam: true,
 
@@ -78,7 +89,7 @@ export const networkAlgorithms = [
       gameType: "Competitive",
       recommendLibraryIfSmallTeam: true,
       devTeamSize: ["Medium", "Large"],
-      playerInteractionLevel: ["None", "Collision", "CombatNormal", "CombatInstant"]
+      playerInteractionLevel: ["None", "Collision", "CombatNormal"]
     },
     allowedNetworkProfiles: ["Peer to Peer", "Client-Server with Client-Side Authority (Relay)"]
   },
