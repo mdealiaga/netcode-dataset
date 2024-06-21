@@ -16,54 +16,34 @@ body {
   background-color: #212735;
   padding: 20px 20px; /* Increase top and bottom padding */
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  position: relative; /* Added for positioning */
+  flex-wrap: wrap; /* Allow header to wrap */
 }
 
 .header-content {
   display: flex;
+  flex-wrap: wrap; /* Allow the content to wrap */
   align-items: center;
   gap: 20px;
-}
-
-.header-link {
-  color: #61dafb;
-  text-decoration: none;
-  font-size: 1em;
-  transition: color 0.3s ease;
-}
-
-.header-link:hover {
-  color: #21a1f1;
+  width: 100%;
+  justify-content: space-between; /* Distribute space between items */
 }
 
 .header-title {
   font-size: 2.5em; /* Increase the font size */
   font-weight: bold;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   padding: 20px 0; /* Add spacing above and below */
-}
-
-.download-link {
-  display: flex;
-  align-items: center;
-}
-
-.download-icon {
-  width: 24px;
-  height: 24px;
-  margin-left: 10px;
+  flex: 1 1 auto; /* Allow title to be flexible */
 }
 
 nav {
   display: flex;
   gap: 15px;
-  position: absolute;
-  right: 20px;
+  flex-wrap: wrap; /* Allow nav links to wrap */
+  justify-content: flex-end; /* Align nav links to the right */
+  flex: 1 1 auto; /* Allow nav to be flexible */
 }
 
 nav a {
