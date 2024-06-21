@@ -1,22 +1,49 @@
 import React from 'react';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, Chart } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
+
+// Custom Plugin to Draw Confidence Interval
+const ConfidenceIntervalBar = {
+    id: 'confidenceIntervalBar',
+    afterDatasetsDraw(chart) {
+        const { ctx, scales: { x, y } } = chart;
+        chart.data.datasets.forEach((dataset) => {
+            if (dataset.label === 'Confidence Interval') {
+                const data = dataset.data[0];
+                const xMin = x.getPixelForValue(data.x);
+                const xMax = x.getPixelForValue(data.x2);
+                const yPos = y.getPixelForValue(0);
+
+                ctx.save();
+                ctx.fillStyle = dataset.backgroundColor;
+                ctx.strokeStyle = dataset.borderColor;
+                ctx.lineWidth = dataset.borderWidth;
+                ctx.fillRect(xMin, yPos - 10, xMax - xMin, 20);
+                ctx.strokeRect(xMin, yPos - 10, xMax - xMin, 20);
+                ctx.restore();
+            }
+        });
+    }
+};
 
 const Summary = ({ summary, confidenceLevel, onConfidenceLevelChange }) => {
     const confidenceIntervalData = {
         labels: [''],
         datasets: [
             {
-                type: 'bar',
+                type: 'scatter',
                 label: 'Confidence Interval',
-                data: [summary.confidenceInterval[1] - summary.confidenceInterval[0]],
+                data: [{
+                    x: summary.confidenceInterval[0],
+                    x2: summary.confidenceInterval[1],
+                    y: 0
+                }],
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
-                barPercentage: 0.5,
-                categoryPercentage: 0.5,
+                pointRadius: 0, // Remove the point for the confidence interval
             },
             {
                 type: 'scatter',
@@ -34,6 +61,11 @@ const Summary = ({ summary, confidenceLevel, onConfidenceLevelChange }) => {
             x: {
                 beginAtZero: true,
                 max: 100,
+                ticks: {
+                    callback: function (value) {
+                        return value + '%';
+                    }
+                },
             },
             y: {
                 display: false,
@@ -101,7 +133,6 @@ const Summary = ({ summary, confidenceLevel, onConfidenceLevelChange }) => {
                 <div style={{ width: '20%', textAlign: 'left' }}>
                     <p><strong>Accuracy:</strong> {summary.accuracy}%</p>
                     <p><strong>{confidenceLevel}% Confidence Interval:</strong> {summary.confidenceInterval[0]}% - {summary.confidenceInterval[1]}%</p>
-
                 </div>
                 <div style={{ width: '20%', textAlign: 'left' }}>
                     <p><strong>Total Games:</strong> {summary.total}</p>
@@ -111,7 +142,7 @@ const Summary = ({ summary, confidenceLevel, onConfidenceLevelChange }) => {
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: '50px', marginTop: '20px', marginBottom: '20px' }}>
                 <div style={{ width: '300px' }}>
-                    <Bar data={confidenceIntervalData} options={confidenceIntervalOptions} />
+                    <Bar data={confidenceIntervalData} options={confidenceIntervalOptions} plugins={[ConfidenceIntervalBar]} />
                 </div>
                 <div style={{ width: '300px' }}>
                     <Bar data={predictionData} options={predictionOptions} />

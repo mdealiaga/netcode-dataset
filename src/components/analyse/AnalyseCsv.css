@@ -7,6 +7,13 @@
     box-sizing: border-box;
   }
   
+  .ag-theme-quartz-dark .ag-cell {
+    white-space: normal !important;
+    line-height: 1.4 !important; /* Adjust line height as needed */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+  
   .evaluation-container h3 {
     text-align: center;
     margin-bottom: 20px;

@@ -4,7 +4,7 @@ export const scoringConfig = {
   onlineEconomy: { mismatchPenalty: 20 },
   devTeamSize: { mismatchPenalty: 20 },
   manyEntities: { mismatchPenalty: 20 },
-  playerInteractionLevel: { mismatchPenalty: 20 }
+  playerInteractionLevel: { mismatchPenalty: 40 }
 };
 
 export const networkProfiles = [

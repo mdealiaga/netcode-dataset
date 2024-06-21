@@ -38,6 +38,18 @@ const AnalyseCsv = () => {
     }
   };
 
+  const mapCombatValue = (combatValue) => {
+    const mapping = {
+      "No Interaction Between Players": "None",
+      "Collision Between Players": "Collision",
+      "Combat - Basic": "CombatNormal",
+      "Combat - Instant": "CombatInstant",
+      "Combat - Responsive": "CombatResponsive"
+    };
+  
+    return mapping[combatValue] || "None"; // Default to "None" if no match found
+  };
+  
   const analyzeData = (data) => {
     const results = data.map((row) => {
       const criteria = {
@@ -46,50 +58,54 @@ const AnalyseCsv = () => {
         onlineEconomy: row['Online Economy'] === 'TRUE',
         devTeamSize: row['Development Team Size'].split(' ')[0],
         manyEntities: row['Many Entities per Player'] === 'TRUE',
-        playerInteractionLevel: row['Player Interaction Level'],
+        playerInteractionLevel: mapCombatValue(row['Player Interaction Level']) // Use the mapping function here
       };
-
+  
       const recommendation = recommendNetworkModel(criteria);
-
+  
       // Filter recommendations with score 80 or higher
       const highScoreRecommendations = recommendation.filter(rec => rec.score >= 80);
-
+      // const highScoreRecommendations = recommendation;
+      console.log(highScoreRecommendations)
       // Combine network profile and algorithms
       const recommendedModels = highScoreRecommendations.map(rec => {
-        return `${rec.name} (Score: ${rec.score})`;
+        // return `${rec.name} (Score: ${rec.score})`;
+        return `${rec.name} (Score: ${rec.score}) (Penalties: ${rec.penalties.map(p => p.key).join(', ')})`;
       }).join(', ');
-
+  
       // Determine actual model used by the game
       const actualModel = createActualModel(row);
-
+  
       // Check if the recommended models match the actual model used by the game
       const matches = highScoreRecommendations.some(model => model.name === actualModel);
-
+  
       return { 
         gameName: row['Game Name'],
         genre: row['Genre'],
+        criteria: JSON.stringify(criteria, null, 2), // Convert criteria to a JSON string
         usedServerModel: actualModel,
         recommendedModelMatches: matches ? 'Yes' : 'No',
         recommendedModels,
         matches
       };
     });
-
+  
     setRowData(results);
     setColumnDefs([
-      { headerName: 'Game Name', field: 'gameName', width: 200 },
-      { headerName: 'Genre', field: 'genre', width: 200 },
-      { headerName: 'Used Server Model', field: 'usedServerModel', width: 200 },
-      { headerName: 'Recommended Model Matches', field: 'recommendedModelMatches', width: 200 },
-      { headerName: 'Recommended Models and Scores', field: 'recommendedModels', width: 400 },
+      { headerName: 'Game Name', field: 'gameName', width: 200, autoHeight: true },
+      { headerName: 'Genre', field: 'genre', width: 200, autoHeight: true },
+      { headerName: 'Criteria', field: 'criteria', width: 300, autoHeight: true }, // Enable wrapping
+      { headerName: 'Used Server Model', field: 'usedServerModel', width: 200, autoHeight: true },
+      { headerName: 'Recommended Model Matches', field: 'recommendedModelMatches', width: 200, autoHeight: true },
+      { headerName: 'Recommended Models and Scores', field: 'recommendedModels', width: 400, autoHeight: true },
     ]);
-
+  
     // Calculate summary statistics
     const total = results.length;
     const correctPredictions = results.filter(result => result.matches).length;
     const incorrectPredictions = total - correctPredictions;
     const accuracy = (correctPredictions / total) * 100;
-
+  
     // Calculate confidence interval using jstat
     const standardError = Math.sqrt((accuracy / 100) * (1 - (accuracy / 100)) / total);
     const zScore = jStat.normal.inv(1 - (1 - confidenceLevel) / 2, 0, 1);
@@ -98,7 +114,7 @@ const AnalyseCsv = () => {
       Math.max(0, accuracy - marginOfError),
       Math.min(100, accuracy + marginOfError)
     ];
-
+  
     setSummary({
       total,
       correctPredictions,
@@ -107,6 +123,8 @@ const AnalyseCsv = () => {
       confidenceInterval: confidenceInterval.map(val => val.toFixed(2))
     });
   };
+  
+  
 
   const createActualModel = (row) => {
     const networkProfile = mapNetworkModel(row['Network Model']);
