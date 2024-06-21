@@ -7,12 +7,14 @@ import CustomHeader from '../dataset/CustomHeader';
 import CustomCell from '../dataset/CustomCell';
 import { CsvDataContext } from '../CsvDataContext';
 import { recommendNetworkModel } from '../recommend/recommendationLogic';
+import jstat from 'jstat';
 
 const AnalyseCsv = () => {
   const { csvData, loading, error } = useContext(CsvDataContext);
   const [rowData, setRowData] = useState([]);
   const [columnDefs, setColumnDefs] = useState([]);
   const [customData, setCustomData] = useState(null);
+  const [summary, setSummary] = useState(null);
 
   useEffect(() => {
     if (csvData) {
@@ -65,7 +67,8 @@ const AnalyseCsv = () => {
         genre: row['Genre'],
         usedServerModel: actualModel,
         recommendedModelMatches: matches ? 'Yes' : 'No',
-        recommendedModels
+        recommendedModels,
+        matches
       };
     });
 
@@ -77,10 +80,28 @@ const AnalyseCsv = () => {
       { headerName: 'Recommended Model Matches', field: 'recommendedModelMatches', width: 200 },
       { headerName: 'Recommended Models and Scores', field: 'recommendedModels', width: 400 },
     ]);
-  };
 
-  const checkForKeyword = (row, keyword) => {
-    return Object.keys(row).some(key => row[key] && row[key].toLowerCase().includes(keyword.toLowerCase()));
+    // Calculate summary statistics
+    const total = results.length;
+    const correctPredictions = results.filter(result => result.matches).length;
+    const accuracy = (correctPredictions / total) * 100;
+
+    // Calculate confidence interval using jstat
+    const confidenceLevel = 0.95;
+    const standardError = Math.sqrt((accuracy / 100) * (1 - (accuracy / 100)) / total);
+    const zScore = jstat.normal.inv(1 - (1 - confidenceLevel) / 2, 0, 1);
+    const marginOfError = zScore * standardError * 100; // Convert to percentage
+    const confidenceInterval = [
+      Math.max(0, accuracy - marginOfError),
+      Math.min(100, accuracy + marginOfError)
+    ];
+
+    setSummary({
+      total,
+      correctPredictions,
+      accuracy: accuracy.toFixed(2),
+      confidenceInterval: confidenceInterval.map(val => val.toFixed(2))
+    });
   };
 
   const createActualModel = (row) => {
@@ -133,8 +154,19 @@ const AnalyseCsv = () => {
 
   return (
     <div>
-      {/* <h2>Analyze CSV Data</h2>
-      <input type="file" accept=".csv" onChange={handleFileUpload} /> */}
+      <h2>Analyze CSV Data</h2>
+      <input type="file" accept=".csv" onChange={handleFileUpload} />
+      
+      {summary && (
+        <div>
+          <h3>Summary</h3>
+          <p>Total Games: {summary.total}</p>
+          <p>Correct Predictions: {summary.correctPredictions}</p>
+          <p>Accuracy: {summary.accuracy}%</p>
+          <p>95% Confidence Interval: {summary.confidenceInterval[0]}% - {summary.confidenceInterval[1]}%</p>
+        </div>
+      )}
+      
       {rowData.length > 0 && (
         <div className="ag-theme-quartz-dark" style={{ height: '600px', width: '100%' }}>
           <AgGridReact
