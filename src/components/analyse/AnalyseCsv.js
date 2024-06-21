@@ -149,7 +149,8 @@ const AnalyseCsv = () => {
   };
 
   const handleConfidenceLevelChange = (e) => {
-    setConfidenceLevel(parseFloat(e.target.value));
+    const newConfidenceLevel = parseFloat(e.target.value);
+    setConfidenceLevel(newConfidenceLevel);
   };
 
   if (loading) {
@@ -162,20 +163,17 @@ const AnalyseCsv = () => {
 
   return (
     <div>
-      {/* <h2>Analyze CSV Data</h2>
-      <input type="file" accept=".csv" onChange={handleFileUpload} /> */}
-      
       {summary && (
         <>
           <Summary summary={summary} />
           <div className="confidence-level-container">
             <label htmlFor="confidence-level">Confidence Level:</label>
             <select id="confidence-level" value={confidenceLevel} onChange={handleConfidenceLevelChange}>
-              <option value="0.80">80%</option>
-              <option value="0.85">85%</option>
-              <option value="0.90">90%</option>
-              <option value="0.95">95%</option>
-              <option value="0.99">99%</option>
+              <option value={0.80}>80%</option>
+              <option value={0.85}>85%</option>
+              <option value={0.90}>90%</option>
+              <option value={0.95}>95%</option>
+              <option value={0.99}>99%</option>
             </select>
           </div>
         </>
