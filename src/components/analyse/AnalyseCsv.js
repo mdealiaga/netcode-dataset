@@ -3,8 +3,8 @@ import Papa from 'papaparse';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
-import CustomHeader from '../CustomHeader';
-import CustomCell from '../CustomCell';
+import CustomHeader from '../dataset/CustomHeader';
+import CustomCell from '../dataset/CustomCell';
 import { CsvDataContext } from '../CsvDataContext';
 import { recommendNetworkModel } from '../recommend/recommendationLogic';
 

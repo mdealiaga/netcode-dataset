@@ -4,7 +4,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import CustomHeader from './CustomHeader';
 import CustomCell from './CustomCell';
-import { CsvDataContext } from './CsvDataContext';
+import { CsvDataContext } from '../CsvDataContext';
 
 const DataTable = () => {
   const { csvData, loading, error } = useContext(CsvDataContext);

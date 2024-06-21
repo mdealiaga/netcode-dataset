@@ -1,0 +1,42 @@
+Timestamp,Game Name,Genre,Lobby Size,Game Type,Online Economy,Development Team Size,Many Entities Per Player,Player Interaction Level,Network Model,Server-Side Rewind (https://developer.valvesoftware.com/wiki/Lag_Compensation),Rollback (https://www.youtube.com/watch?v=0NLe4IpdS1w),Deterministic Lockstep (https://gafferongames.com/post/deterministic_lockstep/),Interest Management,"Third Party Library (Such as Photon Quantum, Source Engine, etc)",Sources
+,Mortal Kombat X,Fighting,Small (1-10),Competitive,FALSE,Large (10+),FALSE,Combat - Responsive,Peer to Peer,FALSE,TRUE,FALSE,FALSE,,"Peer to peer: https://youtu.be/7jb0FOcImdg?si=dqg63BiKB2zmfyVG&t=198
+Deterministic: https://youtu.be/7jb0FOcImdg?si=5dqNC-6Lxx-ek0ky&t=277"
+,Injustice 2,Fighting,Small (1-10),Competitive,FALSE,Large (10+),FALSE,Combat - Responsive,Peer to Peer,FALSE,TRUE,FALSE,FALSE,,"Peer to peer: https://youtu.be/7jb0FOcImdg?si=dqg63BiKB2zmfyVG&t=198
+Deterministic: https://youtu.be/7jb0FOcImdg?si=5dqNC-6Lxx-ek0ky&t=277"
+,Age of Empires 2,Real Time Strategy (RTS),Small (1-10),Competitive,FALSE,,TRUE,Combat - Basic,Peer to Peer,FALSE,FALSE,TRUE,FALSE,,"Peer to peer, deterministic, cheat protection
+https://www.gamedeveloper.com/programming/1500-archers-on-a-28-8-network-programming-in-age-of-empires-and-beyond
+Cheat protection: ""Because the game's outcome depended on all of the users executing exactly the same simulation, it was extremely difficult to hack a client (or client communication stream) and cheat. Any simulation that ran differently was tagged as ""out of sync"" and the game stopped."""
+,Counter Strike: Source,First Person Shooter (FPS),Small (1-10),Competitive,FALSE,,FALSE,Combat - Instant Hit Detection,Client-Server with Server-Side Authority,TRUE,FALSE,FALSE,TRUE,Source Engine (in-house),"Client/Server, Server-Authoritative:
+https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking
+
+Server-Side Rewind: 
+https://developer.valvesoftware.com/wiki/Lag_Compensation"
+,Counter Strike 2,First Person Shooter (FPS),Small (1-10),Competitive,TRUE,,FALSE,Combat - Instant Hit Detection,Client-Server with Server-Side Authority,TRUE,FALSE,FALSE,TRUE,Source 2 Engine (in-house),"Client/Server, Server-Authoritative:
+https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking
+
+Server-Side Rewind: 
+https://developer.valvesoftware.com/wiki/Lag_Compensation"
+,Dota 2,Multiplayer Online Battle Arena (MOBA),Small (1-10),Competitive,TRUE,,TRUE,Combat - Basic,Client-Server with Server-Side Authority,,FALSE,FALSE,TRUE,Source 2 Engine (in-house),
+,Valheim,Survival,Small (1-10),Cooperative,FALSE,,FALSE,Combat - Basic,Client-Server with Client-Side Authority (Relay),FALSE,FALSE,FALSE,TRUE,,"Client/Server and shared authority:
+https://steamcommunity.com/app/892970/discussions/0/4939856028569039376/"
+,Deep Rock Galactic,First Person Shooter (FPS),Small (1-10),Cooperative,FALSE,,FALSE,Combat - Basic,Peer to Peer,,FALSE,FALSE,FALSE,,"Peer-to-Peer
+https://nofrag.com/interview-discussion-with-the-ceo-of-the-studio-behind-deep-rock-galactic/
+
+""We build the game based on Peer-to-Peer tech, so for PvP we would probably need a dedicated server structure."""
+,Stumble Guys,Battle Royale,Medium (11-100),Competitive,FALSE,,FALSE,Collision Between Players,Client-Server with Server-Side Authority,,FALSE,FALSE,FALSE,Photon Quantum,https://www.photonengine.com/ - Slides share which games use which Photon implementation
+,Rocket League,Sports,Small (1-10),Competitive,FALSE,,FALSE,Collision Between Players,Client-Server with Server-Side Authority,FALSE,TRUE,FALSE,FALSE,,"https://www.gdcvault.com/play/1024972/It-IS-Rocket-Science-The
+Lag compensation: 30:00
+Rollback: 40:00 (isn't called rollback)"
+,Lego Star Wars Battles,Action,,Casual,FALSE,,FALSE,,Client-Server with Server-Side Authority,,,FALSE,FALSE,Photon Quantum,https://www.photonengine.com/ - Slides share which games use which Photon implementation
+,NBA Clash,Sports,,,FALSE,,FALSE,,Client-Server with Server-Side Authority,,,FALSE,FALSE,Photon Quantum,https://www.photonengine.com/ - Slides share which games use which Photon implementation
+,Fortnite,Battle Royale,Medium (11-100),Competitive,FALSE,Large (10+),FALSE,Combat - Instant Hit Detection,Client-Server with Server-Side Authority,,,FALSE,,Unreal Engine (in-house),"https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-dedicated-servers-in-unreal-engine
+
+""Unreal Engine (UE) uses the client-server model for network multiplayer games. One server acts as the host for the game while players connect to the host as clients."""
+,Valorant,First Person Shooter (FPS),Small (1-10),Competitive,FALSE,Medium (4-9),FALSE,Combat - Instant Hit Detection,Client-Server with Server-Side Authority,,,FALSE,TRUE,,"https://technology.riotgames.com/news/peeking-valorants-netcode
+
+""Note: VALORANT uses a server-authoritative networking model to limit the types of cheats possible.""
+
+Interest Management: ""https://technology.riotgames.com/news/demolishing-wallhacks-valorants-fog-war"""
+,World of Warcraft,Massive Multiplayer Online Roleplaying Game (MMORPG),Large (101+),,TRUE,Large (10+),FALSE,Combat - Basic,Client-Server with Hybrid Authority,,,FALSE,TRUE,,
+,Starcraft 2,Real Time Strategy (RTS),Small (1-10),Competitive,FALSE,Large (10+),TRUE,Combat - Basic,Client-Server with Client-Side Authority (Relay),,,TRUE,FALSE,,https://myslu.stlawu.edu/~clee/docs/starcraft2.netgames.2012.pdf
+,Starcraft,Real Time Strategy (RTS),Small (1-10),Competitive,FALSE,Large (10+),TRUE,Combat - Basic,Peer to Peer,,,TRUE,FALSE,,https://myslu.stlawu.edu/~clee/docs/starcraft2.netgames.2012.pdf

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import DataTable from './components/DataTable';
+import DataTable from './components/dataset/DataTable';
 import Recommendations from './components/recommend/Recommendations';
 import Profiles from './components/profiles/Profiles';
 import AnalyseCsv from './components/analyse/AnalyseCsv';

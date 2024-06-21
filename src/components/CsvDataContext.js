@@ -1,4 +1,3 @@
-// CsvDataContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { csvUrl } from '../constants';
