@@ -6,11 +6,12 @@
 
 .App-header {
   background-color: #212735;
-  padding: 10px 20px;
+  padding: 35px 20px; /* Increase top and bottom padding */
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
+  position: relative; /* Added for positioning */
 }
 
 .header-content {
@@ -31,14 +32,48 @@
 }
 
 .header-title {
-  margin: 0;
-  font-size: 1.5em;
+  font-size: 2.5em; /* Increase the font size */
   font-weight: bold;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px 0; /* Add spacing above and below */
+}
+
+.download-link {
+  display: flex;
+  align-items: center;
 }
 
 .download-icon {
   width: 24px;
   height: 24px;
+  margin-left: 10px;
+}
+
+nav {
+  display: flex;
+  gap: 15px;
+  position: absolute;
+  right: 20px;
+}
+
+nav a {
+  color: #e0e0e0;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav a:hover {
+  background-color: #3a3f51;
+  color: #ffffff;
+}
+
+nav a.active {
+  background-color: #61dafb;
+  color: #212735;
 }
 
 .content {

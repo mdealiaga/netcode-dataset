@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Papa from 'papaparse';
-import { recommendNetworkModel } from './recommendationLogic';
+import { recommendNetworkModel } from '../recommend/recommendationLogic';
 
-const AnalyzeCsv = () => {
+const AnalyseCsv = () => {
   const [fileContent, setFileContent] = useState(null);
   const [analysisResults, setAnalysisResults] = useState([]);
 
@@ -140,4 +140,4 @@ const createActualModel = (row) => {
   );
 };
 
-export default AnalyzeCsv;
+export default AnalyseCsv;

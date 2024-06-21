@@ -14,6 +14,7 @@ export const networkProfiles = [
       lobbySize: ["Small", "Medium", "Large"],
       manyEntities: false,
       gameType: "Competitive",
+      onlineEconomy: [true, false],
       playerInteractionLevel: ["Collision", "CombatNormal", "CombatInstant"],
       recommendLibraryIfSmallTeam: true
     }
