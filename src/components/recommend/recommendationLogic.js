@@ -97,7 +97,14 @@ const generateSecondaryCombinations = (primary) => {
 
   secondaryCombinations.forEach(combination => {
     if (combination.length > 0 && !containsProhibitedPairing(combination.map(sec => sec.name), prohibitedPairings)) {
-      const combinedCriteria = combination.reduce((acc, secondary) => combineCriteria(acc, secondary.criteria), primary.combinedCriteria);
+      let combinedCriteria = combination.reduce((acc, secondary) => combineCriteria(acc, secondary.criteria), primary.combinedCriteria);
+
+      // Special case: Handle Third Party Library
+      const includesThirdPartyLibrary = combination.some(secondary => secondary.name === "Third Party Library");
+      if (includesThirdPartyLibrary) {
+        combinedCriteria.devTeamSize = ["Small"];
+      }
+
       const secondaryNames = combination.map(sec => sec.name);
       validCombinations.push({
         name: `${primary.name} with ${secondaryNames.join(' and ')}`,

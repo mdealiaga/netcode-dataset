@@ -9,6 +9,7 @@ export const scoringConfig = {
 
 export const criteriaCombinationConfig = {
   default: 'union', 
+   devTeamSize: 'intersection'
   // playerInteractionLevel: 'intersection'
 };
 
@@ -79,7 +80,8 @@ export const networkAlgorithms = [
   {
     name: "Server-Side Rewind",
     criteria: {
-      playerInteractionLevel: "CombatInstant"
+      playerInteractionLevel: "CombatInstant",
+      devTeamSize: ["Medium", "Large"],
     },
     allowedNetworkProfiles: ["Client-Server with Server-Side Authority"]
   },
