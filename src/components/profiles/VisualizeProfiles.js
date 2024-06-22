@@ -137,7 +137,11 @@ const VisualizeProfiles = () => {
 
         sortMethod: 'directed',
           nodeSpacing: 300, // Increase spacing between nodes
-          levelSeparation: 250 // Increase separation between levels
+          levelSeparation: 250, // Increase separation between levels
+          blockShifting: true, // Enable block shifting to better center the nodes
+          edgeMinimization: true, // Enable edge minimization to reduce edge crossings
+          parentCentralization: true // Enable parent centralization to better center the nodes
+
         }
       },
       physics: {
@@ -154,7 +158,9 @@ const VisualizeProfiles = () => {
     new Network(container, data, options);
   }, []);
 
-  return <div id="network" style={{ height: '800px' }}></div>;
+  return <div className="network-container-outer">
+            <div className="network-container" id="network"></div>
+         </div>;
 };
 
 export default VisualizeProfiles;
