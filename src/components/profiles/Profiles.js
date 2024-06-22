@@ -1,6 +1,7 @@
 import React from 'react';
 import { networkProfiles, networkAlgorithms } from '../recommend/config';
 import './Profiles.css';
+import VisualizeProfiles from './VisualizeProfiles';
 
 const criteriaLabels = {
   lobbySize: "Lobby Size",
@@ -40,6 +41,8 @@ const renderCriteria = (criteria) => {
 const Profiles = () => {
   return (
     <div className="profiles-container">
+      <h2>Network Profiles Visualization</h2>
+      <VisualizeProfiles />
       <h2>Network Profiles</h2>
       <div className="profile-list">
         {networkProfiles.map((profile, index) => (
@@ -56,7 +59,6 @@ const Profiles = () => {
             <h3>{algorithm.name}</h3>
             {renderCriteria(algorithm.criteria)}
             <p><strong>Allowed Network Profiles:</strong> {arrayToString(algorithm.allowedNetworkProfiles)}</p>
-            {/* <p><strong>Allowed SubModels:</strong> {arrayToString(algorithm.allowedSubModels)}</p> */}
           </div>
         ))}
       </div>

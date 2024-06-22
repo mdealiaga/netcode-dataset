@@ -83,7 +83,8 @@ export const networkAlgorithms = [
       playerInteractionLevel: "CombatInstant",
       devTeamSize: ["Medium", "Large"],
     },
-    allowedNetworkProfiles: ["Client-Server with Server-Side Authority"]
+    allowedNetworkProfiles: ["Client-Server with Server-Side Authority"],
+    level: 1,
   },
   {
     name: "Rollback",
@@ -95,7 +96,8 @@ export const networkAlgorithms = [
       playerInteractionLevel: "CombatResponsive",
       manyEntities: false
     },
-    allowedNetworkProfiles: ["Peer to Peer", "Client-Server with Client-Side Authority (Relay)"]
+    allowedNetworkProfiles: ["Peer to Peer", "Client-Server with Client-Side Authority (Relay)"],
+    level: 1,
   },
   {
     name: "Deterministic Lockstep",
@@ -107,14 +109,16 @@ export const networkAlgorithms = [
       devTeamSize: ["Medium", "Large"],
       playerInteractionLevel: ["None", "Collision", "CombatNormal"]
     },
-    allowedNetworkProfiles: ["Peer to Peer", "Client-Server with Client-Side Authority (Relay)"]
+    allowedNetworkProfiles: ["Peer to Peer", "Client-Server with Client-Side Authority (Relay)"],
+    level: 1,
   },
   {
     name: "Interest Management",
     criteria: {
       lobbySize: ["Medium", "Large"]
     },
-    allowedNetworkProfiles: ["Client-Server with Server-Side Authority", "Client-Server with Client-Side Authority (Relay)", "Client-Server with Hybrid Authority", "Peer to Peer"]
+    allowedNetworkProfiles: ["Client-Server with Server-Side Authority", "Client-Server with Client-Side Authority (Relay)", "Client-Server with Hybrid Authority", "Peer to Peer"],
+    level: 2,
   },
   {
     name: "Third Party Library",
@@ -122,6 +126,7 @@ export const networkAlgorithms = [
       devTeamSize: ["Small"]
     },
     allowedNetworkProfiles: ["Client-Server with Server-Side Authority", "Peer to Peer"],
-    other: true // Flag to identify this as "Other" in the profile view
+    other: true, // Flag to identify this as "Other" in the profile view
+    level: 2,
   }
 ];
