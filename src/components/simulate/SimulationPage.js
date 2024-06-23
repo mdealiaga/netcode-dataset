@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Bar } from 'react-chartjs-2';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
@@ -95,18 +96,47 @@ const SimulationPage = () => {
     ]);
   }, []);
 
+  const barData = {
+    labels: ['Perfect (100)', 'Good (80+)', 'Not Recommended (60-79)', 'Probably Not Usable (0-59)', 'No Recommendation (0)'],
+    datasets: [
+      {
+        label: 'Simulation Results',
+        data: results ? [results.perfect, results.good, results.notRecommended, results.probablyNotUsable, results.noRecommendation] : [],
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)'
+        ],
+        borderColor: [
+          'rgba(75, 192, 192, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const barOptions = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
   return (
     <div className="simulation-page">
       <h2>Simulation Results</h2>
       {results ? (
         <div>
-          <p><strong>Perfect (100):</strong> {results.perfect}</p>
-          <p><strong>Good (80+):</strong> {results.good}</p>
-          <p><strong>Not Recommended (60-79):</strong> {results.notRecommended}</p>
-          <p><strong>Probably Not Usable (0-59):</strong> {results.probablyNotUsable}</p>
-          <p><strong>No Recommendation (0):</strong> {results.noRecommendation}</p>
-
-          <h3>Detailed Results</h3>
+          <div style={{ width: '60%', margin: '0 auto', marginBottom: '20px' }}>
+            <Bar data={barData} options={barOptions} />
+          </div>
           <div className="ag-theme-quartz-dark" style={{ height: '600px', width: 'calc(100% - 40px)', margin: '0 auto', padding: '20px' }}>
             <AgGridReact
               rowData={results.summary}

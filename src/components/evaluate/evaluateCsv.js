@@ -9,9 +9,9 @@ import { CsvDataContext } from '../CsvDataContext';
 import { recommendNetworkModel } from '../recommend/recommendationLogic';
 import Summary from './Summary';
 import jStat from 'jstat';
-import './AnalyseCsv.css';
+import './evaluateCsv.css';
 
-const AnalyseCsv = () => {
+const EvaluateCsv = () => {
   const { csvData, loading, error } = useContext(CsvDataContext);
   const [rowData, setRowData] = useState([]);
   const [columnDefs, setColumnDefs] = useState([]);
@@ -21,7 +21,7 @@ const AnalyseCsv = () => {
 
   useEffect(() => {
     if (csvData) {
-      analyzeData(csvData);
+      evaluateData(csvData);
     }
   }, [csvData, confidenceLevel]); // Recalculate when confidence level changes
 
@@ -32,7 +32,7 @@ const AnalyseCsv = () => {
         header: true,
         complete: (result) => {
           setCustomData(result.data);
-          analyzeData(result.data);
+          evaluateData(result.data);
         },
       });
     }
@@ -50,7 +50,7 @@ const AnalyseCsv = () => {
     return mapping[combatValue] || "None"; // Default to "None" if no match found
   };
   
-  const analyzeData = (data) => {
+  const evaluateData = (data) => {
     const results = data.map((row) => {
       const criteria = {
         lobbySize: row['Lobby Size'].split(' ')[0],
@@ -224,4 +224,4 @@ const AnalyseCsv = () => {
   );
 };
 
-export default AnalyseCsv;
+export default EvaluateCsv;

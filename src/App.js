@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import DataTable from './components/dataset/DataTable';
 import Recommendations from './components/recommend/Recommendations';
 import Profiles from './components/profiles/Profiles';
-import AnalyseCsv from './components/analyse/AnalyseCsv';
+import EvaluateCsv from './components/evaluate/evaluateCsv';
 import SimulationPage from './components/simulate/SimulationPage';
 
 import './App.css';
@@ -18,7 +18,7 @@ function Header() {
           <Link to="/">Home</Link>
           <Link to="/recommend">Recommendations</Link>
           <Link to="/profiles">Profiles</Link>
-          <Link to="/analyse">Evaluation</Link>
+          <Link to="/evaluate">Evaluation</Link>
           <Link to="/simulate">Simulate</Link>
           <a
             href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSev34FK3e5MuHtQED5AUSovGEAU9l5TgxP4_w-RnEQRngIM6EDBRvzPS7WJnWKHjPrzMsl9BlCI1ly/pub?gid=133993680&single=true&output=csv"
@@ -44,7 +44,7 @@ function App() {
               <Route path="/" element={<DataTable />} />
               <Route path="/recommend" element={<Recommendations />} />
               <Route path="/profiles" element={<Profiles />} />
-              <Route path="/analyse" element={<AnalyseCsv />} />
+              <Route path="/evaluate" element={<EvaluateCsv />} />
               <Route path="/simulate" element={<SimulationPage />} /> 
             </Routes>
           </div>
