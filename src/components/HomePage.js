@@ -39,7 +39,7 @@ const HomePage = () => {
           <a
             href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSev34FK3e5MuHtQED5AUSovGEAU9l5TgxP4_w-RnEQRngIM6EDBRvzPS7WJnWKHjPrzMsl9BlCI1ly/pub?gid=133993680&single=true&output=csv"
             download
-            className="header-link"
+            className="download-link" /* Add a specific class for this link */
           >
             Download Dataset
           </a>

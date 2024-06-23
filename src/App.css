@@ -30,10 +30,6 @@ body {
   width: 100%;
   justify-content: space-between; /* Distribute space between items */
 }
-.header-logo {
-  width: 64px; 
-  height: 64px; 
-}
 
 .header-title {
   font-size: 2.5em; /* Increase the font size */
@@ -51,7 +47,7 @@ nav {
 }
 
 nav a {
-  color: #e0e0e0;
+  color: #a0a0a0; /* Change to a lighter grey for better contrast */
   text-decoration: none;
   padding: 10px 15px;
   border-radius: 4px;
@@ -245,16 +241,35 @@ input[type="radio"]:checked::before {
   width: 200px;
 }
 
+.home-links a {
+  color: #a0a0a0; /* Different color for other links */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.home-links a:hover {
+  color: #ffffff;
+}
+
+.home-links a.download-link {
+  color: #61dafb; /* Specific color for the "Download Dataset" link */
+}
+
 .home-links h3 {
   margin-top: 0;
 }
 
-/* .header-content nav {
-  display: flex;
-  gap: 10px;
-} */
-
 .header-link {
-  color: #61dafb;
+  color: #61dafb; /* Same color for the "Download Dataset" link */
   text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: inline-block; /* Ensure it aligns with other links */
+  margin-left: 15px; /* Add margin to the left */
+}
+
+.header-link:hover {
+  background-color: #3a3f51;
+  color: #ffffff;
 }
