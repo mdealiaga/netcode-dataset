@@ -15,10 +15,10 @@ function Header() {
       <div className="header-content">
         <h1 className="header-title">Game Netcode Database</h1>
         <nav>
-          <Link to="/">Home</Link>
-          <Link to="/recommend">Recommendations</Link>
+          <Link to="/">Dataset</Link>
           <Link to="/profiles">Profiles</Link>
-          <Link to="/evaluate">Evaluation</Link>
+          <Link to="/recommend">Recommend</Link>
+          <Link to="/evaluate">Evaluate</Link>
           <Link to="/simulate">Simulate</Link>
           <a
             href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSev34FK3e5MuHtQED5AUSovGEAU9l5TgxP4_w-RnEQRngIM6EDBRvzPS7WJnWKHjPrzMsl9BlCI1ly/pub?gid=133993680&single=true&output=csv"
