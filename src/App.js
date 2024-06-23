@@ -3,19 +3,23 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import DataTable from './components/dataset/DataTable';
 import Recommendations from './components/recommend/Recommendations';
 import Profiles from './components/profiles/Profiles';
-import EvaluateCsv from './components/evaluate/evaluateCsv';
+import EvaluateCsv from './components/evaluate/EvaluateCsv';
 import SimulationPage from './components/simulate/SimulationPage';
+import HomePage from './components/HomePage';
 
 import './App.css';
 import { CsvDataProvider } from './components/CsvDataContext';
+import logo from './assets/logo.webp'; // Adjust the path if necessary
 
 function Header() {
   return (
     <header className="App-header">
       <div className="header-content">
+        {/* <img src={logo} alt="Logo" className="header-logo" /> */}
         <h1 className="header-title">Game Netcode Database</h1>
         <nav>
-          <Link to="/">Dataset</Link>
+          <Link to="/">Home</Link>
+          <Link to="/dataset">Dataset</Link>
           <Link to="/profiles">Profiles</Link>
           <Link to="/recommend">Recommend</Link>
           <Link to="/evaluate">Evaluate</Link>
@@ -41,11 +45,12 @@ function App() {
           <Header />
           <div className="content">
             <Routes>
-              <Route path="/" element={<DataTable />} />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/dataset" element={<DataTable />} />
               <Route path="/recommend" element={<Recommendations />} />
               <Route path="/profiles" element={<Profiles />} />
               <Route path="/evaluate" element={<EvaluateCsv />} />
-              <Route path="/simulate" element={<SimulationPage />} /> 
+              <Route path="/simulate" element={<SimulationPage />} />
             </Routes>
           </div>
         </div>

@@ -30,6 +30,10 @@ body {
   width: 100%;
   justify-content: space-between; /* Distribute space between items */
 }
+.header-logo {
+  width: 64px; 
+  height: 64px; 
+}
 
 .header-title {
   font-size: 2.5em; /* Increase the font size */
@@ -220,4 +224,37 @@ input[type="radio"]:checked::before {
 .error-message {
   color: red;
   margin-top: 5px;
+}
+
+.home-page {
+  text-align: center;
+  padding: 20px;
+}
+
+.home-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.home-links div {
+  background-color: #3a3f51;
+  padding: 20px;
+  border-radius: 10px;
+  width: 200px;
+}
+
+.home-links h3 {
+  margin-top: 0;
+}
+
+/* .header-content nav {
+  display: flex;
+  gap: 10px;
+} */
+
+.header-link {
+  color: #61dafb;
+  text-decoration: none;
 }
