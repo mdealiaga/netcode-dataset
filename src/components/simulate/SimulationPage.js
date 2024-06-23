@@ -97,24 +97,24 @@ const SimulationPage = () => {
   }, []);
 
   const barData = {
-    labels: ['Perfect (100)', 'Good (80+)', 'Not Recommended (60-79)', 'Probably Not Usable (0-59)', 'No Recommendation (0)'],
+    labels: ['No Recommendation (0)', 'Probably Not Usable (0-59)', 'Not Recommended (60-79)', 'Good (80+)', 'Perfect (100)'],
     datasets: [
       {
         label: 'Simulation Results',
-        data: results ? [results.perfect, results.good, results.notRecommended, results.probablyNotUsable, results.noRecommendation] : [],
+        data: results ? [results.noRecommendation, results.probablyNotUsable, results.notRecommended, results.good, results.perfect] : [],
         backgroundColor: [
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
           'rgba(255, 159, 64, 0.2)',
-          'rgba(255, 99, 132, 0.2)'
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(75, 192, 192, 0.2)'
         ],
         borderColor: [
-          'rgba(75, 192, 192, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
+          'rgba(255, 99, 132, 1)',
           'rgba(255, 159, 64, 1)',
-          'rgba(255, 99, 132, 1)'
+          'rgba(255, 206, 86, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(75, 192, 192, 1)'
         ],
         borderWidth: 1,
       },
@@ -125,6 +125,11 @@ const SimulationPage = () => {
     scales: {
       y: {
         beginAtZero: true,
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
       },
     },
   };
