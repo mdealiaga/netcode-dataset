@@ -1,0 +1,16 @@
+.simulation-page {
+    padding: 20px;
+    background-color: #212735;
+    color: #e0e0e0;
+  }
+  
+  .simulation-page h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .simulation-page p {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  

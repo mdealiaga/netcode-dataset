@@ -4,6 +4,8 @@ import DataTable from './components/dataset/DataTable';
 import Recommendations from './components/recommend/Recommendations';
 import Profiles from './components/profiles/Profiles';
 import AnalyseCsv from './components/analyse/AnalyseCsv';
+import SimulationPage from './components/simulate/SimulationPage';
+
 import './App.css';
 import { CsvDataProvider } from './components/CsvDataContext';
 
@@ -17,6 +19,7 @@ function Header() {
           <Link to="/recommend">Recommendations</Link>
           <Link to="/profiles">Profiles</Link>
           <Link to="/analyse">Evaluation</Link>
+          <Link to="/simulate">Simulate</Link>
           <a
             href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSev34FK3e5MuHtQED5AUSovGEAU9l5TgxP4_w-RnEQRngIM6EDBRvzPS7WJnWKHjPrzMsl9BlCI1ly/pub?gid=133993680&single=true&output=csv"
             download
@@ -42,6 +45,7 @@ function App() {
               <Route path="/recommend" element={<Recommendations />} />
               <Route path="/profiles" element={<Profiles />} />
               <Route path="/analyse" element={<AnalyseCsv />} />
+              <Route path="/simulate" element={<SimulationPage />} /> 
             </Routes>
           </div>
         </div>
