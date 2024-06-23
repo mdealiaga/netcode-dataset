@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { recommendNetworkModel } from '../recommend/recommendationLogic';
 import './SimulationPage.css';
 
@@ -74,11 +77,22 @@ const evaluateCombinations = (combinations) => {
 
 const SimulationPage = () => {
   const [results, setResults] = useState(null);
+  const [columnDefs, setColumnDefs] = useState([]);
 
   useEffect(() => {
     const combinations = generateCombinations();
     const results = evaluateCombinations(combinations);
     setResults(results);
+
+    setColumnDefs([
+      { headerName: 'Lobby Size', field: 'criteria.lobbySize', width: 200, autoHeight: true },
+      { headerName: 'Game Type', field: 'criteria.gameType', width: 200, autoHeight: true },
+      { headerName: 'Online Economy', field: 'criteria.onlineEconomy', width: 200, autoHeight: true, cellRenderer: params => params.value ? 'Yes' : 'No' },
+      { headerName: 'Dev Team Size', field: 'criteria.devTeamSize', width: 200, autoHeight: true },
+      { headerName: 'Many Entities', field: 'criteria.manyEntities', width: 200, autoHeight: true, cellRenderer: params => params.value ? 'Yes' : 'No' },
+      { headerName: 'Player Interaction Level', field: 'criteria.playerInteractionLevel', width: 200, autoHeight: true },
+      { headerName: 'Highest Score', field: 'highestScore', width: 200, autoHeight: true },
+    ]);
   }, []);
 
   return (
@@ -91,34 +105,18 @@ const SimulationPage = () => {
           <p><strong>Not Recommended (60-79):</strong> {results.notRecommended}</p>
           <p><strong>Probably Not Usable (0-59):</strong> {results.probablyNotUsable}</p>
           <p><strong>No Recommendation (0):</strong> {results.noRecommendation}</p>
+
           <h3>Detailed Results</h3>
-          <div className="results-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Lobby Size</th>
-                  <th>Game Type</th>
-                  <th>Online Economy</th>
-                  <th>Dev Team Size</th>
-                  <th>Many Entities</th>
-                  <th>Player Interaction Level</th>
-                  <th>Highest Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {results.summary.map((result, index) => (
-                  <tr key={index}>
-                    <td>{result.criteria.lobbySize}</td>
-                    <td>{result.criteria.gameType}</td>
-                    <td>{result.criteria.onlineEconomy ? 'Yes' : 'No'}</td>
-                    <td>{result.criteria.devTeamSize}</td>
-                    <td>{result.criteria.manyEntities ? 'Yes' : 'No'}</td>
-                    <td>{result.criteria.playerInteractionLevel}</td>
-                    <td>{result.highestScore}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="ag-theme-quartz-dark" style={{ height: '600px', width: 'calc(100% - 40px)', margin: '0 auto', padding: '20px' }}>
+            <AgGridReact
+              rowData={results.summary}
+              columnDefs={columnDefs}
+              defaultColDef={{ flex: 1, minWidth: 200, filter: true, sortable: true }}
+              pagination={true}
+              paginationPageSize={25}
+              domLayout='autoHeight'
+              headerHeight={100}
+            />
           </div>
         </div>
       ) : (
