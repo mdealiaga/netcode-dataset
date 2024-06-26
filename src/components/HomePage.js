@@ -35,7 +35,7 @@ const HomePage = () => {
         </div>
         <div>
           <h3>Download Dataset</h3>
-          <p>Download the full dataset in CSV format.</p>
+          <p>Download the full dataset in CSV format</p>
           <a
             href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSev34FK3e5MuHtQED5AUSovGEAU9l5TgxP4_w-RnEQRngIM6EDBRvzPS7WJnWKHjPrzMsl9BlCI1ly/pub?gid=133993680&single=true&output=csv"
             download
